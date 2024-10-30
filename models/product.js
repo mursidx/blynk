@@ -41,7 +41,7 @@ const validateProduct = (productData) => {
         price: Joi.number().min(0).required(),
         category: Joi.string().required(),
         stock: Joi.boolean().required(),
-        description: Joi.string().required(),
+        description: Joi.string().optional(),
         image: Joi.string().optional(), 
     });
 

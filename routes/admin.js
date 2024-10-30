@@ -6,7 +6,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const admin = require("../models/admin");
 const { func } = require("joi");
-const validateAdmin = require('../middlewares/admin')
+const validateAdmin = require("../middlewares/admin");
+const { productModel } = require("../models/product");
+let { categoryModel, validateCategory } = require("../models/category");
 
 router.get("/create", async function (req, res) {
   try {
@@ -21,7 +23,7 @@ router.get("/create", async function (req, res) {
     });
     await user.save();
 
-    let token = jwt.sign({ email: "admin@blynk.com" }, process.env.JWT_SECRET);
+    let token = jwt.sign({ email: "admin@blynk.com", admin: true }, process.env.JWT_SECRET);
     res.cookie(token);
     res.send("Admin Created Successfully");
   } catch (error) {
@@ -40,17 +42,50 @@ router.post("/login", async function (req, res) {
 
   let valid = await bcrypt.compare(password, admin.password);
   if (valid) {
-    let token = jwt.sign({ email: "admin@blynk.com" }, process.env.JWT_SECRET);
+    let token = jwt.sign(
+      { email: "admin@blynk.com", admin: true },
+      process.env.JWT_SECRET
+    );
     res.cookie("token", token);
     res.redirect("/admin/dashboard");
   }
 });
 
-router.get('/dashboard', validateAdmin, function(req, res){
-  res.render('admin_dashboard')
-})
-router.get('/logout', validateAdmin, function(req, res){
+router.get("/dashboard", validateAdmin, async function (req, res) {
+  let prodcount = await productModel.find().countDocuments(); 
+  let categcount = await categoryModel.find().countDocuments();
+
+  res.render("admin_dashboard", {prodcount, categcount});
+});
+router.get("/logout", validateAdmin, function (req, res) {
   res.cookie("token", "");
-  res.redirect('/')
-})
+  res.redirect("/");
+});
+
+router.get("/products", validateAdmin, async function (req, res) {
+  const resultArray = await productModel.aggregate([
+    {
+      $group: {
+        _id: "$category",
+        products: { $push: "$$ROOT" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        category: "$_id",
+        products: { $slice: ["$products", 10] },
+      },
+    },
+  ]);
+
+  // Convert the array into an object
+  const resultObject = resultArray.reduce((acc, item) => {
+    acc[item.category] = item.products;
+    return acc;
+  }, {});
+
+  res.render("admin_products", { products: resultObject });
+});
+
 module.exports = router;

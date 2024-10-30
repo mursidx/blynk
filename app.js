@@ -5,6 +5,7 @@ const indexRouter = require("./routes/index");
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const productRouter = require('./routes/product');
+const categoriesRouter = require('./routes/categories')
 const expressSession = require("express-session");
 require('./config/db')
 require('./config/googleOauth-config')
@@ -26,5 +27,6 @@ app.use("/", indexRouter);
 app.use('/auth', authRouter);
 app.use('/admin',adminRouter);
 app.use('/products', productRouter);
+app.use('/categories', categoriesRouter);
 
 app.listen(3000);

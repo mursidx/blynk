@@ -20,7 +20,7 @@ const productSchema = mongoose.Schema(
             required: true,
         },
         stock: {
-            type: Boolean,
+            type: Number,
             required: true,
         },
         description: {
@@ -40,7 +40,7 @@ const validateProduct = (productData) => {
         name: Joi.string().min(3).max(100).required(),
         price: Joi.number().min(0).required(),
         category: Joi.string().required(),
-        stock: Joi.boolean().required(),
+        stock: Joi.number().required(),
         description: Joi.string().optional(),
         image: Joi.string().optional(), 
     });

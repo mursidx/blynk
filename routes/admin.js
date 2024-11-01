@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const admin = require("../models/admin");
 const { func } = require("joi");
-const validateAdmin = require("../middlewares/admin");
+const {validateAdmin} = require("../middlewares/admin");
 const { productModel } = require("../models/product");
 let { categoryModel, validateCategory } = require("../models/category");
 
@@ -57,6 +57,8 @@ router.get("/dashboard", validateAdmin, async function (req, res) {
 
   res.render("admin_dashboard", {prodcount, categcount});
 });
+
+
 router.get("/logout", validateAdmin, function (req, res) {
   res.cookie("token", "");
   res.redirect("/");

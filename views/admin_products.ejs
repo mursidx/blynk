@@ -1,71 +1,98 @@
 <%- include('./partials/header'); %>
 
-    <body class="bg-gray-100">
-        <div class="flex flex-col min-h-screen">
-            <!-- Header -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <h1 class="text-3xl font-bold text-gray-900">Product Management</h1>
+<body class="bg-gray-100">
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
+                <h1 class="text-3xl font-bold text-gray-900">Product Management</h1>
+                <a href="/admin/dashboard">Create new</a>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="flex-1 overflow-y-auto">
+            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <!-- Search Bar -->
+                <div class="mb-6">
+                    <form action="/admin/products/search" method="GET" class="flex">
+                        <input type="text" name="product_id" placeholder="Search by Product ID"
+                            class="w-full p-2 border border-gray-300 rounded-l">
+                        <button type="submit"
+                            class="bg-indigo-600 text-white py-2 px-4 rounded-r hover:bg-indigo-700">
+                            Search
+                        </button>
+                    </form>
                 </div>
-            </header>
 
-            <!-- Main content -->
-            <main class="flex-1 overflow-y-auto">
-                <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                    <!-- Search Bar -->
-                    <div class="mb-6">
-                        <form action="/admin/products/search" method="GET" class="flex">
-                            <input type="text" name="product_id" placeholder="Search by Product ID"
-                                class="w-full p-2 border border-gray-300 rounded-l">
-                            <button type="submit"
-                                class="bg-indigo-600 text-white py-2 px-4 rounded-r hover:bg-indigo-700">
-                                Search
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Product List by Category -->
-                    <% for(let key in products){ %>
-                        <div class="bg-white shadow rounded-lg mb-6 p-6">
-                            <h2 class="text-2xl font-semibold text-gray-800">
-                                <%= key %>
-                            </h2>
-                            <% products[key].forEach(function(elem){ %>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-                                    <div class="bg-gray-50 p-4 rounded-lg shadow">
-                                        <img class="w-32 h-32 mb-3"
-                                            src="data:image/png;base64, <%= elem.image.toString('base64') %>" alt="">
-                                        <h3 class="text-lg font-medium text-gray-900">
-                                            <%= elem.name %>
-                                        </h3>
-                                        <p class="mt-2 text-gray-600">Price: <%= elem.price %>
-                                        </p>
-                                        <p class="mt-2 text-gray-600">Stock: <%= elem.stock %>
-                                        </p>
-                                        <p class="mt-2 text-gray-600">
-                                            <%= elem.description %>
-                                        </p>
-                                        <p class="mt-2 text-sm text-gray-500">Product ID: <%= elem._id %>
-                                        </p>
-                                        <div class="mt-5 flex gap-4">
-                                            <a href="/products/delete/<%= elem._id %>"
-                                                class="capitalize inline-block text-red-600">delete</a>
-                                            <a href="/products/update/<%= elem._id %>" class="capitalize inline-block text-blue-600">update</a>
-                                        </div>
+                <!-- Product List by Category -->
+                <% for(let key in products){ %>
+                    <div class="bg-white shadow rounded-lg mb-6 p-6">
+                        <h2 class="text-2xl font-semibold text-gray-800">
+                            <%= key %>
+                        </h2>
+                        
+                        <!-- Product container for each category, hidden beyond initial 3 items -->
+                        <div id="product-container-<%= key %>" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                            <% products[key].forEach(function(elem, index){ %>
+                                <div class="product-item <%= index >= 3 ? 'hidden' : '' %> bg-gray-50 p-4 rounded-lg shadow">
+                                    <img class="w-32 h-32 mb-3"
+                                        src="data:image/png;base64, <%= elem.image.toString('base64') %>" alt="">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <%= elem.name %>
+                                    </h3>
+                                    <p class="mt-2 text-gray-600">Price: <%= elem.price %>
+                                    </p>
+                                    <p class="mt-2 text-gray-600">Stock: <%= elem.stock %>
+                                    </p>
+                                    <p class="mt-2 text-gray-600">
+                                        <%= elem.description %>
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-500">Product ID: <%= elem._id %>
+                                    </p>
+                                    <div class="mt-5 flex gap-4">
+                                        <a href="/products/delete/<%= elem._id %>"
+                                            class="capitalize inline-block text-red-600">delete</a>
+                                        <a href="" class="capitalize inline-block text-blue-600">update</a>
                                     </div>
                                 </div>
-                                <% }) %>
-                                    <div class="mt-4 text-center">
-                                        <a href="/admin/products?category=&page=2"
-                                            class="text-indigo-600 hover:text-indigo-800">See
-                                            More</a>
-                                    </div>
+                            <% }) %>
                         </div>
+                        
+                        <!-- Load More button if more than 3 products -->
+                        <% if (products[key].length > 3) { %>
+                            <div class="mt-4 text-center">
+                                <button class="load-more-btn text-indigo-600 hover:text-indigo-800" data-category="<%= key %>">Load More</button>
+                            </div>
                         <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
 
-                </div>
-            </main>
-        </div>
-    </body>
+    <!-- JavaScript for Load More functionality -->
+    <script>
+        document.querySelectorAll('.load-more-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const category = button.getAttribute('data-category');
+                const container = document.getElementById(`product-container-${category}`);
+                const hiddenItems = container.querySelectorAll('.product-item.hidden');
 
-    <%- include('./partials/footer'); %>
+                // Show the next 3 hidden products
+                hiddenItems.forEach((item, index) => {
+                    if (index < 3) {
+                        item.classList.remove('hidden');
+                    }
+                });
+
+                // Hide button if no more hidden products
+                if (container.querySelectorAll('.product-item.hidden').length === 0) {
+                    button.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+<%- include('./partials/footer'); %>

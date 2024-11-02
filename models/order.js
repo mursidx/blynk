@@ -4,6 +4,10 @@ const Joi = require("joi");
 // Define the order schema with Mongoose validation and timestamps
 const orderSchema = mongoose.Schema(
     {
+        orderId: {
+            type: String,
+            required: true,
+        },
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
@@ -23,7 +27,6 @@ const orderSchema = mongoose.Schema(
         },
         address: {
             type: String,
-            required: true,
             minlength: 5,
             maxlength: 100,
         },
@@ -40,7 +43,6 @@ const orderSchema = mongoose.Schema(
         delivery: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "delivery",
-            required: true,
         },
     },
     { timestamps: true }

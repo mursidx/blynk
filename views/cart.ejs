@@ -4,7 +4,9 @@
         <div class="max-w-screen-md mx-auto p-4">
             <!-- Header -->
             <div class="flex justify-between items-center py-4">
-                <button class="text-lg"><i class="ri-arrow-left-s-line"></i></button>
+                <a href="/" class="text-lg inline-flex items-center">
+                    <i class="ri-arrow-left-s-line"></i>
+                </a>
                 <h1 class="text-xl font-semibold">Checkout</h1>
                 <button class="text-lg">Share</button>
             </div>
@@ -36,7 +38,8 @@
                                 <p class="mx-2">
                                     <%= elem.quantity %>
                                 </p>
-                                <button class="px-2 py-1 rounded"><i class="ri-add-line"></i></button>
+                                <a href="/cart/add/<%= elem._id %>" class="px-2 py-1 rounded"><i
+                                    class="ri-add-line"></i></a>
                             </div>
                             <div class="flex gap-2 mt-4">
                                 <p class="text-gray-500 line-through">₹<%= Number(elem.price)*Number(elem.quantity)+20
@@ -209,7 +212,7 @@
                                     })
                                     .then(function (response) {
                                         let { razorpayOrderId, razorpayPaymentId, signature } = JSON.parse(response.config.data);
-                                        window.location.href = `/order/${razorpayOrderId}/${razorpayPaymentId}/${signature}`;
+                                        window.location.href = `/order/<%= userid %>/${razorpayOrderId}/${razorpayPaymentId}/${signature}`;
                                     })
                                     .catch(function (error) {
                                         console.error(error);

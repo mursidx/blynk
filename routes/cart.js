@@ -4,9 +4,11 @@ require("dotenv").config();
 const { validateAdmin, userIsLoggedIn } = require("../middlewares/admin");
 const { cartModel, validatecart } = require("../models/cart");
 const { productModel } = require("../models/product");
+const {userModel} = require('../models/user')
 
 router.get("/", userIsLoggedIn, async function (req, res) {
   try {
+    let userid = req.session.passport.user;
     let cart = await cartModel
       .findOne({ user: req.session.passport.user })
       .populate("products");
@@ -28,7 +30,7 @@ router.get("/", userIsLoggedIn, async function (req, res) {
       
       let finalarray = Object.values(cartDataStructure)
 
-    res.render("cart", { cart: finalarray, finalprice: cart.totalprice });
+    res.render("cart", { cart: finalarray, finalprice: cart.totalprice, userid });
   } catch (error) {
     res.send(error.message);
   }

@@ -1,6 +1,18 @@
 const express = require("express");
 const app = express();
+const expressSession = require("express-session");
+const path = require('path');
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const joi = require("joi");
+
+
 require("dotenv").config();
+require('./config/db')
+require('./config/googleOauth-config')
+
+
+
 const indexRouter = require("./routes/index");
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
@@ -8,13 +20,9 @@ const productRouter = require('./routes/product');
 const categoriesRouter = require('./routes/categories')
 const userRouter = require('./routes/user')
 const cartRouter = require('./routes/cart')
-const expressSession = require("express-session");
-require('./config/db')
-require('./config/googleOauth-config')
-const path = require('path');
-const cookieParser = require("cookie-parser");
-const passport = require("passport");
-const { func } = require("joi");
+const paymentRouter = require('./routes/payment')
+const orderRouter = require('./routes/order')
+
 
 app.use(cookieParser())
 app.use(express.json());
@@ -39,6 +47,8 @@ app.use('/products', productRouter);
 app.use('/categories', categoriesRouter);
 app.use('/users', userRouter)
 app.use('/cart', cartRouter);
+app.use('/payment', paymentRouter);
+app.use('/order', orderRouter);
 
 
 app.listen(3000);

@@ -4,12 +4,7 @@
         <div class="max-w-screen-md mx-auto p-4">
             <!-- Header -->
             <div class="flex justify-between items-center py-4">
-                <a href="/">
-                    <button class="text-lg">
-                        <i class="ri-arrow-left-s-line"></i>
-                    </button>
-                </a>
-                
+                <button class="text-lg"><i class="ri-arrow-left-s-line"></i></button>
                 <h1 class="text-xl font-semibold">Checkout</h1>
                 <button class="text-lg">Share</button>
             </div>
@@ -41,9 +36,7 @@
                                 <p class="mx-2">
                                     <%= elem.quantity %>
                                 </p>
-                                <a href="/cart/add/<%= elem._id %>" class="px-2 py-1 rounded"><i
-                                    class="ri-add-line"></i></a>
-                                <!-- <button class="px-2 py-1 rounded"><i class="ri-add-line"></i></button> -->
+                                <button class="px-2 py-1 rounded"><i class="ri-add-line"></i></button>
                             </div>
                             <div class="flex gap-2 mt-4">
                                 <p class="text-gray-500 line-through">₹<%= Number(elem.price)*Number(elem.quantity)+20
@@ -196,7 +189,53 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-   
+            <script>
+                document.querySelector('.paybtn').onclick = function (e) {
+                    axios.post('/payment/create/orderId')
+                        .then(function (response) {
+                            var options = {
+                                "key": "rzp_test_itTvoWeSi1lZca", // Enter the Key ID generated from the Dashboard
+                                "amount": response.data.amount, // Amount in currency subunits. Default currency is INR.
+                                "currency": response.data.currency,
+                                "name": "Blynk",
+                                "description": "Test Transaction",
+                                "image": "https://gplclub.co/wp-content/uploads/2024/09/favicon-gplclub-1-150x150.webp",
+                                "order_id": response.data.id,
+                                "handler": function (response) {
+                                    axios.post('/payment/api/payment/verify', {
+                                        razorpayOrderId: response.razorpay_order_id,
+                                        razorpayPaymentId: response.razorpay_payment_id,
+                                        signature: response.razorpay_signature
+                                    })
+                                    .then(function (response) {
+                                        let { razorpayOrderId, razorpayPaymentId, signature } = JSON.parse(response.config.data);
+                                        window.location.href = `/order/${razorpayOrderId}/${razorpayPaymentId}/${signature}`;
+                                    })
+                                    .catch(function (error) {
+                                        console.error(error);
+                                    });
+                                },
+                                "prefill": {
+                                    "name": "Harsh Sharma",
+                                    "email": "harsh.sharma@example.com",
+                                    "contact": "9000090000"
+                                },
+                                "notes": {
+                                    "address": "Razorpay Corporate Office"
+                                },
+                                "theme": {
+                                    "color": "#3399cc"
+                                }
+                            };
+                            var rzp1 = new Razorpay(options);
+                            rzp1.open();
+                            e.preventDefault();
+                        })
+                        .catch(function (error) {
+                            console.error(error);
+                        });
+                };
+            </script>
             
     </body>
 

@@ -32,6 +32,17 @@ router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) 
 });
 
 
+router.post('/address/:orderid',async function(req, res){
+  let order = await orderModel.findOne({orderId: req.params.orderid});
+  if(!order) return res.send("Sorry, this order does not exists");
+  if(!req.body.address) return res.send("You much provide address");
+  order.address = req.body.address;
+  await order.save()
+  res.redirect('/')
+  await cartModel.deleteMany({ userId: order.userId });
+})
+
+
 
 
 

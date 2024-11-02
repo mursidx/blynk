@@ -9,8 +9,9 @@ router.get('/', function (req, res) {
 
 
 router.get('/map/:orderid',async function(req, res){
-    let orderid = await paymentModel.findOne({orderId: req.params.orderid})
-    res.render('map', {orderid})
+    // console.log(req.params.orderid)
+    // let orderid = await paymentModel.findOne({orderId: req.params.orderid})
+    res.render('map', {orderid: req.params.orderid})
 })
 
 module.exports = router;

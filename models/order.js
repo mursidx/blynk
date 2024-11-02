@@ -48,22 +48,8 @@ const orderSchema = mongoose.Schema(
     { timestamps: true }
 );
 
-// Joi validation for order data
-const validateOrder = (orderData) => {
-    const schema = Joi.object({
-        user: Joi.string().required(), // Should be a valid ObjectId string
-        products: Joi.array().items(Joi.string().required()).min(1).required(), // Array of ObjectId strings
-        totalprice: Joi.number().min(0).required(),
-        address: Joi.string().min(5).max(100).required(),
-        status: Joi.string().valid("pending", "confirmed", "shipped", "delivered", "canceled").required(),
-        payment: Joi.string().required(), // Should be a valid ObjectId string
-        delivery: Joi.string().required(), // Should be a valid ObjectId string
-    });
 
-    return schema.validate(orderData);
-};
 
 module.exports = {
-    orderModel: mongoose.model("order", orderSchema),
-    validateOrder,
+    orderModel: mongoose.model("order", orderSchema)
 };

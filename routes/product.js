@@ -9,6 +9,8 @@ const { cartModel } = require("../models/cart");
 
 router.get("/", userIsLoggedIn, async function (req, res) {
   let somethingInCart = false;
+
+  // Fetch categorized products
   const resultArray = await productModel.aggregate([
     {
       $group: {
@@ -25,11 +27,17 @@ router.get("/", userIsLoggedIn, async function (req, res) {
     },
   ]);
 
+  // Find the user's cart
   let cart = await cartModel.findOne({ user: req.session.passport.user });
-  if (cart && cart.products.length > 0) {
-    somethingInCart = true;
+  
+  // Set 'somethingInCart' and 'cartCount' if a cart exists
+  let cartCount = 0;
+  if (cart) {
+    somethingInCart = cart.products.length > 0;
+    cartCount = cart.products.length;
   }
 
+  // Fetch random products
   let rnproducts = await productModel.aggregate([{ $sample: { size: 3 } }]);
 
   // Convert the array into an object
@@ -38,8 +46,10 @@ router.get("/", userIsLoggedIn, async function (req, res) {
     return acc;
   }, {});
 
-  res.render("index", { products: resultObject, rnproducts, somethingInCart, cartCount: cart.products.length });
+  // Render the page with cart information and product data
+  res.render("index", { products: resultObject, rnproducts, somethingInCart, cartCount });
 });
+
 
 router.get("/delete/:id", validateAdmin, async function (req, res) {
   if (req.user.admin) {

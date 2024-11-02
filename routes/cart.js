@@ -28,7 +28,7 @@ router.get("/", userIsLoggedIn, async function (req, res) {
       
       let finalarray = Object.values(cartDataStructure)
 
-    res.render("cart", { cart: finalarray });
+    res.render("cart", { cart: finalarray, finalprice: cart.totalprice });
   } catch (error) {
     res.send(error.message);
   }
@@ -58,16 +58,19 @@ router.get("/add/:id", userIsLoggedIn, async function (req, res) {
 router.get("/remove/:id", userIsLoggedIn, async function (req, res) {
   try {
     let cart = await cartModel.findOne({ user: req.session.passport.user });
-    if (!cart) return res.send("Something went wrong while removing item");
+    let product = await productModel.findOne({ _id: req.params.id });
+    if (!cart) return res.send("Something went wrong while removing item")
+ 
     let index = cart.products.indexOf(req.params.id);
     if (index !== -1) {
       cart.products.splice(index, 1);
     } else {
       return res.send("Item is not in the cart");
     }
+    cart.totalprice = Number(cart.totalprice) - Number(product.price);
 
     await cart.save();
-    res.send(cart);
+    res.redirect("back");
   } catch (error) {
     res.send(error.message);
   }

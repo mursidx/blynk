@@ -7,14 +7,32 @@ const { productModel } = require("../models/product");
 
 router.get("/", userIsLoggedIn, async function (req, res) {
   try {
-    let cart = await cartModel.find({ user: req.session.passport.user })
-    res.send(cart)
-  } catch (error) {
-    res.send(error.message)
+    let cart = await cartModel
+      .findOne({ user: req.session.passport.user })
+      .populate("products");
 
+      let cartDataStructure = {};
+
+      cart.products.forEach((product) => {
+        let key = String(product._id);
+        if (cartDataStructure[key]) {
+          cartDataStructure[key].quantity += 1;
+        } else {
+          // Initialize the entry if it doesn't exist
+          cartDataStructure[key] = {
+            ...product._doc || product, // Use product._doc if available, otherwise use product directly
+            quantity: 1,
+          };
+        }
+      });
+      
+      let finalarray = Object.values(cartDataStructure)
+
+    res.render("cart", { cart: finalarray });
+  } catch (error) {
+    res.send(error.message);
   }
 });
-
 
 router.get("/add/:id", userIsLoggedIn, async function (req, res) {
   try {
@@ -39,23 +57,19 @@ router.get("/add/:id", userIsLoggedIn, async function (req, res) {
 
 router.get("/remove/:id", userIsLoggedIn, async function (req, res) {
   try {
-
-    let cart = await cartModel.findOne({ user: req.session.passport.user })
-    if (!cart) return res.send("Something went wrong while removing item")
-    let index = cart.products.indexOf(req.params.id)
-    if (index !== -1){
-      cart.products.splice(index, 1)
-    }else{
-      return res.send('Item is not in the cart')
+    let cart = await cartModel.findOne({ user: req.session.passport.user });
+    if (!cart) return res.send("Something went wrong while removing item");
+    let index = cart.products.indexOf(req.params.id);
+    if (index !== -1) {
+      cart.products.splice(index, 1);
+    } else {
+      return res.send("Item is not in the cart");
     }
 
-    await cart.save()
-    res.send(cart)
-
+    await cart.save();
+    res.send(cart);
   } catch (error) {
-
-    res.send(error.message)
-
+    res.send(error.message);
   }
 });
 

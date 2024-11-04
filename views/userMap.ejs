@@ -42,11 +42,12 @@
 <body>
 
     <div id="inputs">
-        <form method="post" action="/order/address/<%= orderid %>">
+        <form method="post" action="/address/<%= userid %>">
             <label for="end">Destination:</label>
             <input type="text" name="address" id="end" placeholder="Enter destination">
             <div id="suggestions" class="autocomplete-suggestions"></div>
-            <input type="submit" value="get order">
+            <button type="button" id="useCurrentLocation">Use Current Location</button>
+            <input type="submit" >
         </form>
     </div>
 

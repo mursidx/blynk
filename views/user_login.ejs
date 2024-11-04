@@ -1,19 +1,32 @@
 <%- include('./partials/header'); %>
+    <style>
+        #login-logo {
+            width: 30vw;
+            /* Default width for larger screens */
+        }
 
-<body class="h-screen w-screen flex items-center justify-center bg-[#F8CD4C]">
-    <div class="relative h-full w-full flex items-center justify-center">
-        <!-- Centered Logo Image -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Blinkit-yellow-rounded.svg/640px-Blinkit-yellow-rounded.svg.png"
-             alt="Blinkit Logo" class="w-40 h-40">
+        @media (max-width: 768px) {
+            #login-logo {
+                width: 60vw;
+                /* Adjust width for mobile screens */
+            }
+        }
+    </style>
 
-        <!-- Button at the Bottom -->
-        <div class="absolute bottom-0 w-full flex justify-center mb-8">
-            <a href="/auth/google"
-               class="bg-black text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-900 transition duration-300">
-                Continue with Google
-            </a>
+    <body class="h-screen w-screen flex items-center justify-center bg-[#F8CD4C]">
+        <div class="relative h-full w-full flex items-center justify-center">
+            <!-- Centered Logo Image -->
+            <img id="login-logo" src="https://gplclub.co/wp-content/uploads/2024/11/blynk-logo-copy.webp"
+                alt="Blinkit Logo">
+
+            <!-- Button at the Bottom -->
+            <div class="absolute bottom-0 w-full flex justify-center mb-8">
+                <a href="/auth/google"
+                    class="bg-black text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-900 transition duration-300">
+                    Continue with Google
+                </a>
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 
-<%- include('./partials/footer'); %>
+    <%- include('./partials/footer'); %>

@@ -6,6 +6,7 @@ const { productModel, validateProduct } = require("../models/product");
 let { categoryModel, validateCategory } = require("../models/category");
 const upload = require("../config/multer_config");
 const { cartModel } = require("../models/cart");
+const { userModel } = require("../models/user");
 
 router.get("/", userIsLoggedIn, async function (req, res) {
   let somethingInCart = false;
@@ -27,6 +28,10 @@ router.get("/", userIsLoggedIn, async function (req, res) {
     },
   ]);
 
+  // Find the user
+  let userid = req.session.passport.user;
+  let user = await userModel.findOne({_id: userid})
+  let address = user.address
   // Find the user's cart
   let cart = await cartModel.findOne({ user: req.session.passport.user });
   
@@ -47,7 +52,7 @@ router.get("/", userIsLoggedIn, async function (req, res) {
   }, {});
 
   // Render the page with cart information and product data
-  res.render("index", { products: resultObject, rnproducts, somethingInCart, cartCount });
+  res.render("index", { products: resultObject, rnproducts, somethingInCart, cartCount, userid, address });
 });
 
 

@@ -4,6 +4,7 @@ const { func } = require("joi");
 const { paymentModel } = require("../models/payment");
 const { orderModel } = require("../models/order");
 const { cartModel } = require("../models/cart");
+const { userModel } = require("../models/user");
 const router = express.Router(); // Create a router instance
 
 router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) {
@@ -34,11 +35,16 @@ router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) 
 
 router.post('/address/:orderid',async function(req, res){
   let order = await orderModel.findOne({orderId: req.params.orderid});
+  let userid = req.session.passport.user;
+  let user = await userModel.findOne({_id: userid})
   if(!order) return res.send("Sorry, this order does not exists");
   if(!req.body.address) return res.send("You much provide address");
   order.address = req.body.address;
+  user.address = req.body.address;
   await order.save()
+  await user.save()
   res.redirect('/')
+  console.log(user)
   await cartModel.deleteMany({ userId: order.userId });
 })
 

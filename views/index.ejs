@@ -14,12 +14,42 @@
             height: 200px;
             background-color: #f0f0f0;
         }
+        .content {
+    margin-top: 6vh; /* Default margin for larger screens */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .content {
+        margin-top: 12vh; /* Adjust margin for mobile screens */
+    }
+}
     </style>
 
     <body class="bg-gray-100 font-sans">
         <div class="max-w-screen-lg mx-auto p-4">
+           <div class="bg-white p-4 rounded-lg shadow mb-4 fixed top-0 left-0 right-0 z-10">
+                <div class="flex items-center gap-4">
+                    <i
+                        class="w-10 h-10 flex items-center justify-center rounded bg-zinc-100 text-2xl ri-timer-line"></i>
+                        <div>
+                            <p class="text-sm font-medium delivery-time"></p>
+                            
+                            <% if (cartCount > 0) { %>
+                                <p class="text-xs text-gray-500">Shipment of <%= cartCount %> item<%= cartCount > 1 ? 's' : '' %></p>
+                            <% } %>
+                            
+                            <% if (address) { %>
+                                <p class="text-xs text-gray-500">Delivering to: <%= address %></p>
+                            <% } else { %>
+                                <p class="text-xs text-blue-500"><a href="/map/address/<%= userid %>">Select Address</a></p>
+                            <% } %>
+                        </div>
+                        
+                </div>
+                </div>
             <!-- Order Now Section -->
-            <div class="bg-white p-4 rounded-lg shadow mb-4">
+            <div class="bg-white p-4 rounded-lg shadow mb-4 content">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold">Order Now</h2>
                     <button class="text-blue-500">see all</button>
@@ -38,7 +68,8 @@
                             </p>
                             <p class="font-bold">₹<%= elem.price %>
                             </p>
-                            <button class="bg-green-700 text-white px-4 py-1 rounded mt-2">ADD</button>
+                            <a class="px-4 text-white text-xs rounded mt-2 inline-block py-1 bg-green-700"
+                                    href="/cart/add/<%= elem._id %>">ADD</a>
                         </div>
                         <%}) %>
                 </div>
@@ -155,5 +186,22 @@
                 }
             });
         </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if delivery time is already stored in sessionStorage
+            let deliveryTime = sessionStorage.getItem('deliveryTime');
+
+            if (!deliveryTime) {
+                // Generate a new random delivery time between 3 and 12 minutes
+                deliveryTime = Math.floor(Math.random() * 10) + 3; // Random number between 3 and 12
+                // Store the generated delivery time in sessionStorage
+                sessionStorage.setItem('deliveryTime', deliveryTime);
+            }
+
+            // Update the delivery time on the page
+            const deliveryTimeElement = document.querySelector('.delivery-time');
+            deliveryTimeElement.textContent = `Delivery in ${deliveryTime} minutes`;
+        });
+    </script>
     </body>
     <%- include('./partials/footer'); %>

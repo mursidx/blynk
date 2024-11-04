@@ -2,33 +2,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
-// Define the address schema with Mongoose validation
-const addressSchema = mongoose.Schema({
-    state: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 50,
-    },
-    zip: {
-        type: Number,
-        required: true,
-        min: 10000,
-        max: 999999,
-    },
-    city: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 50,
-    },
-    street: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 100,
-    },
-});
+
 
 // Define the user schema with Mongoose validation
 const userSchema = mongoose.Schema(
@@ -53,9 +27,10 @@ const userSchema = mongoose.Schema(
             type: Number,
             min: 1000000000,
             max: 9999999999,
-        },
-        addresses: {
-            type: [addressSchema],
+        }, address: {
+            type: String,
+            minlength: 5,
+            maxlength: 100,
         },
     },
     { timestamps: true }
@@ -75,7 +50,6 @@ const validateUser = (userData) => {
         email: Joi.string().email().required(),
         password: Joi.string().min(6),
         phone: Joi.number().min(1000000000).max(9999999999),
-        addresses: Joi.array().items(addressSchema).min(1).required(),
     });
 
     return schema.validate(userData);

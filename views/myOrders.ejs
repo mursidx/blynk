@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Orders</title>
   <style>
+    /* Basic resets */
     * {
       margin: 0;
       padding: 0;
@@ -12,6 +13,7 @@
       font-family: Arial, sans-serif;
     }
 
+    /* Page styling */
     body {
       background-color: #f8f9fa;
       padding: 20px;
@@ -24,6 +26,7 @@
       margin-bottom: 20px;
     }
 
+    /* Header with search bar */
     .header {
       display: flex;
       justify-content: space-between;
@@ -38,6 +41,7 @@
       border: 1px solid #ddd;
     }
 
+    /* Order Card Styling */
     .order-card {
       background-color: #fff;
       border: 1px solid #ddd;
@@ -49,13 +53,14 @@
 
     .order-header {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
       margin-bottom: 10px;
     }
 
     .order-header h2 {
-      font-size: 1rem;
+      font-size: 14px;
       color: #007bff;
     }
 
@@ -70,6 +75,7 @@
       color: #555;
     }
 
+    /* Product List Styling */
     .product-list {
       list-style-type: none;
       padding: 0;
@@ -88,6 +94,7 @@
       border-bottom: none;
     }
 
+    /* Product Image */
     .product-image {
       width: 60px;
       height: 60px;
@@ -96,6 +103,7 @@
       margin-right: 15px;
     }
 
+    /* Product Details */
     .product-details {
       flex-grow: 1;
     }
@@ -112,6 +120,7 @@
       font-size: 0.85rem;
     }
 
+    /* Reorder button */
     .reorder-button {
       position: absolute;
       right: 0;
@@ -128,6 +137,7 @@
       background-color: #0056b3;
     }
 
+    /* Buy Again Section */
     .suggestions {
       margin-top: 30px;
     }
@@ -166,6 +176,7 @@
       margin-top: 5px;
     }
 
+    /* Responsive adjustments */
     @media (max-width: 600px) {
       .product-image {
         width: 50px;
@@ -188,21 +199,25 @@
     <input type="text" class="search-bar" placeholder="Search all orders">
   </div>
 
+  
+
   <% if (orders && orders.length > 0) { %>
     <% orders.forEach((order, index) => { %>
       <div class="order-card">
         <div class="order-header">
           <h2>Order <%= index + 1 %> (ID: <%= order._id %>)</h2>
           <% 
+            // Randomly decide if the order arrives tomorrow or a random date
             let arrivalDate;
-            const randomChance = Math.random();
-            if (randomChance < 0.5) {
+            const randomChance = Math.random(); // Generates a number between 0 and 1
+            if (randomChance < 0.5) { // 50% chance for arriving tomorrow
               arrivalDate = new Date();
-              arrivalDate.setDate(arrivalDate.getDate() + 1);
+              arrivalDate.setDate(arrivalDate.getDate() + 1); // Set to tomorrow
               %>
               <span class="order-status">Arriving Tomorrow</span>
           <% } else { 
-              const daysToAdd = Math.floor(Math.random() * 4) + 2;
+              // Randomly choose a date between 2 to 5 days from order date
+              const daysToAdd = Math.floor(Math.random() * 4) + 2; // Random number between 2 and 5
               arrivalDate = new Date(order.createdAt);
               arrivalDate.setDate(arrivalDate.getDate() + daysToAdd);
               %>

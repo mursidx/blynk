@@ -70,7 +70,7 @@ router.post("/address/:orderid", async function (req, res) {
   user.address = req.body.address;
   await order.save();
   await user.save();
-  res.redirect("/");
+  res.redirect("/order");
 });
 
 router.get("/", async function (req, res) {

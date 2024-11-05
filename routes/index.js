@@ -20,7 +20,6 @@ router.get('/map/:orderid',async function(req, res){
 router.get('/map/address/:userid',async function(req, res){
     let userid = req.params.userid;
     let user = await userModel.findOne({_id: userid})
-    console.log(String(user.address))
  
     // console.log(req.params.orderid)
     // let orderid = await paymentModel.findOne({orderId: req.params.orderid})

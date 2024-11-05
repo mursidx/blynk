@@ -9,32 +9,40 @@ const {userModel} = require('../models/user')
 router.get("/", userIsLoggedIn, async function (req, res) {
   try {
     let userid = req.session.passport.user;
+    let user = await userModel.findOne({ _id: userid });
     let cart = await cartModel
       .findOne({ user: req.session.passport.user })
       .populate("products");
 
-      let cartDataStructure = {};
+    let cartDataStructure = {};
 
-      cart.products.forEach((product) => {
-        let key = String(product._id);
-        if (cartDataStructure[key]) {
-          cartDataStructure[key].quantity += 1;
-        } else {
-          // Initialize the entry if it doesn't exist
-          cartDataStructure[key] = {
-            ...product._doc || product, // Use product._doc if available, otherwise use product directly
-            quantity: 1,
-          };
-        }
-      });
-      
-      let finalarray = Object.values(cartDataStructure)
+    // Count the products in the cart
+    cart.products.forEach((product) => {
+      let key = String(product._id);
+      if (cartDataStructure[key]) {
+        cartDataStructure[key].quantity += 1;
+      } else {
+        // Initialize the entry if it doesn't exist
+        cartDataStructure[key] = {
+          ...product._doc || product, // Use product._doc if available, otherwise use product directly
+          quantity: 1,
+        };
+      }
+    });
 
-    res.render("cart", { cart: finalarray, finalprice: cart.totalprice, userid });
+    let finalarray = Object.values(cartDataStructure);
+
+    // Calculate the cart count
+    let cartCount = finalarray.reduce((total, product) => total + product.quantity, 0);
+    console.log(cartCount)
+
+    // Render the cart view with cart count
+    res.render("cart", { cart: finalarray, finalprice: cart.totalprice, userid, user, cartCount });
   } catch (error) {
     res.send(error.message);
   }
 });
+
 
 router.get("/add/:id", userIsLoggedIn, async function (req, res) {
   try {

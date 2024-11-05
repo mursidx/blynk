@@ -8,6 +8,8 @@ const { userModel } = require("../models/user");
 const router = express.Router(); // Create a router instance
 
 router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) {
+  let user = await userModel.findOne({_id: req.params.userid})
+  let address = user.address
   let paymentDetails = await paymentModel.findOne({
     orderId: req.params.orderid,
   });
@@ -16,17 +18,33 @@ router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) 
   
   // Check for both signature and payment ID
   if (req.params.signature === paymentDetails.signature && req.params.paymentid === paymentDetails.paymentId) {
-    let userCart = await cartModel.findOne({user: req.params.userid})
-    await orderModel.create({
-      orderId: req.params.orderid,
-      user: req.params.userid,
-      products: userCart.products,
-      totalprice: userCart.totalprice,
-      status: "pending",
-      payment: paymentDetails._id,
-  })
+    let userCart = await cartModel.findOne({user: req.params.userid});
+    if(address && address.trim().length > 0){
+      await orderModel.create({
+        orderId: req.params.orderid,
+        user: req.params.userid,
+        products: userCart.products,
+        totalprice: userCart.totalprice,
+        status: "pending",
+        payment: paymentDetails._id,
+        address: user.address,
+    });
+    }else{
+      await orderModel.create({
+        orderId: req.params.orderid,
+        user: req.params.userid,
+        products: userCart.products,
+        totalprice: userCart.totalprice,
+        status: "pending",
+        payment: paymentDetails._id,
+    });
+    }
+
+  let order = await orderModel.findOne({orderId: req.params.orderid});
+
+  await cartModel.deleteMany({ userId: order.userId});
     // res.redirect(`/map/${req.params.orderid}`);
-    res.render('complete', {orderid: req.params.orderid})
+    res.render('complete', {orderid: req.params.orderid, address: user.address})
   } else {
     res.send("Invalid payment");
   }
@@ -35,21 +53,16 @@ router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) 
 
 router.post('/address/:orderid',async function(req, res){
   let order = await orderModel.findOne({orderId: req.params.orderid});
-  let userid = req.session.passport.user;
+  let userid = order.user;
   let user = await userModel.findOne({_id: userid})
   if(!order) return res.send("Sorry, this order does not exists");
-  if(!req.body.address) return res.send("You much provide address");
+  if(!req.body.address) return res.send("You must provide a valid address");
   order.address = req.body.address;
   user.address = req.body.address;
   await order.save()
   await user.save()
   res.redirect('/')
-  console.log(user)
-  await cartModel.deleteMany({ userId: order.userId });
 })
-
-
-
 
 
 module.exports = router;

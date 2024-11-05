@@ -81,7 +81,7 @@ router.get("/", async function (req, res) {
     res.render('myOrders', { orders }); // Directly pass populated orders to template
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server Error, please login");
   }
 });
 

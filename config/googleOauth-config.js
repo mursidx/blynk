@@ -7,7 +7,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://blynkdemo.onrender.com/auth/google/callback",
+      callbackURL: `${process.env.LIVE_URL}/auth/google/callback`,
     },
     async function (accessToken, refreshToken, profile, cb) {
       try {

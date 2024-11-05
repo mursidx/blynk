@@ -16,23 +16,31 @@
 
   .content {
     width: 100%;
-    margin-top: 15vh;
     margin-bottom: 3vh;
     /* Default margin for larger screens */
   }
 
-  /* Media query for mobile devices */
-  @media (max-width: 768px) {
-    .content {
-      margin-top: 15vh;
-      margin-bottom: 3vh;
-    }
-  }
+
+
+  #address-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1vh 2vw; /* Adjust padding as needed */
+    z-index: 50;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+}
+
+
 </style>
 
 <body class="bg-gray-100 font-sans">
   <div class="max-w-screen-lg mx-auto p-4">
-    <div class="bg-white p-4 shadow mb-4 fixed top-0 left-0 right-0 z-10">
+    <div id="address-bar">
       <div class="flex items-center gap-4">
         <i
           class="w-10 h-10 flex items-center justify-center rounded bg-zinc-100 text-2xl ri-timer-line"
@@ -119,11 +127,11 @@
     <div class="py-20"></div>
     <!-- Footer -->
     <div class="p-4 rounded-lg fixed bottom-0 inset-x-0">
-      <div class="flex justify-between items-center mt-2">
+      <div class="flex justify-between items-center mt-2 lg:justify-center">
         <a
           id="cart-button"
           href="/cart"
-          class="flex items-center justify-between px-4 py-1 bg-green-700 text-white w-full"
+          class="flex items-center justify-between px-4 py-1 bg-green-700 text-white w-full lg:w-6/12"
         >
           <div class="flex items-center">
             <div class="mr-2">
@@ -231,5 +239,26 @@
       deliveryTimeElement.textContent = `Delivery in ${deliveryTime} minutes`;
     });
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to adjust the content's top margin based on the address bar's height
+        function adjustContentMargin() {
+            const addressBar = document.getElementById("address-bar");
+            const content = document.querySelector(".content");
+    
+            if (addressBar && content) {
+                const addressBarHeight = addressBar.offsetHeight; // Get the height of the address bar
+                content.style.marginTop = addressBarHeight + "px"; // Apply it as margin-top to content
+            }
+        }
+    
+        // Call the function on page load
+        adjustContentMargin();
+    
+        // Recalculate the margin-top if the window is resized, in case the content changes
+        window.addEventListener("resize", adjustContentMargin);
+    });
+    </script>
+    
 </body>
 <%- include('./partials/footer'); %>

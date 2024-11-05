@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express"); // Ensure express is required
 const router = express.Router(); // Create a router instance
 const { paymentModel } = require("../models/payment");
+const { cartModel } = require("../models/cart");
+const { userModel } = require("../models/user");
 const Razorpay = require("razorpay");
 
 const razorpay = new Razorpay({
@@ -10,8 +12,17 @@ const razorpay = new Razorpay({
 });
 
 router.post("/create/orderId", async (req, res) => {
+
+  let userid = req.session.passport.user;
+  let user = await userModel.findOne({ _id: userid });
+  let cart = await cartModel
+    .findOne({ user: req.session.passport.user })
+    .populate("products");
+  let finalprice = cart.totalprice;
+
+
   const options = {
-    amount: 5000 * 100, // amount in smallest currency unit
+    amount: finalprice * 100, // amount in smallest currency unit
     currency: "INR",
   };
   try {

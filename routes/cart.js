@@ -34,7 +34,6 @@ router.get("/", userIsLoggedIn, async function (req, res) {
 
     // Calculate the cart count
     let cartCount = finalarray.reduce((total, product) => total + product.quantity, 0);
-    console.log(cartCount)
 
     // Render the cart view with cart count
     res.render("cart", { cart: finalarray, finalprice: cart.totalprice, userid, user, cartCount });

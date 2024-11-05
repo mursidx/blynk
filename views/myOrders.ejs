@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+    }
+
+    .order-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .order-header h2 {
+      font-size: 1rem;
+      color: #007bff;
+    }
+
+    .order-status {
+      color: #28a745;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .order-date {
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .product-list {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 10px 0;
+      position: relative;
+    }
+
+    .product-item:last-child {
+      border-bottom: none;
+    }
+
+    .product-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    .product-details {
+      flex-grow: 1;
+    }
+
+    .product-name {
+      font-weight: bold;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .product-price {
+      color: #28a745;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .reorder-button {
+      position: absolute;
+      right: 0;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .reorder-button:hover {
+      background-color: #0056b3;
+    }
+
+    .suggestions {
+      margin-top: 30px;
+    }
+
+    .suggestions h2 {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .suggestion-items {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+    }
+
+    .suggestion-item {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .suggestion-item img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .suggestion-name {
+      font-size: 0.8rem;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .product-image {
+        width: 50px;
+        height: 50px;
+      }
+
+      .product-name {
+        font-size: 0.8rem;
+      }
+
+      .product-price, .order-status, .order-date {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>My Orders</h1>
+  <div class="header">
+    <input type="text" class="search-bar" placeholder="Search all orders">
+  </div>
+
+  <% if (orders && orders.length > 0) { %>
+    <% orders.forEach((order, index) => { %>
+      <div class="order-card">
+        <div class="order-header">
+          <h2>Order <%= index + 1 %> (ID: <%= order._id %>)</h2>
+          <% 
+            let arrivalDate;
+            const randomChance = Math.random();
+            if (randomChance < 0.5) {
+              arrivalDate = new Date();
+              arrivalDate.setDate(arrivalDate.getDate() + 1);
+              %>
+              <span class="order-status">Arriving Tomorrow</span>
+          <% } else { 
+              const daysToAdd = Math.floor(Math.random() * 4) + 2;
+              arrivalDate = new Date(order.createdAt);
+              arrivalDate.setDate(arrivalDate.getDate() + daysToAdd);
+              %>
+              <span class="order-status">Arriving on: <%= arrivalDate.toLocaleDateString() %></span>
+          <% } %>
+        </div>
+        <p class="order-date">Placed on: <%= order.createdAt.toLocaleDateString() %> at <%= order.createdAt.toLocaleTimeString() %></p>
+        
+        <ul class="product-list">
+          <% order.products.forEach(product => { %>
+            <li class="product-item">
+              <img src="data:image/jpg;base64,<%= product.image.toString('base64') %>" 
+                   alt="<%= product.name %>" 
+                   class="product-image">
+              <div class="product-details">
+                <span class="product-name"><%= product.name %></span>
+                <span class="product-price">$<%= product.price %></span>
+              </div>
+              <div class="reorder-button">Reorder</div>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p class="empty-message">You have no orders.</p>
+  <% } %>
+</body>
+</html>

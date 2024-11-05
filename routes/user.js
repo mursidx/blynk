@@ -8,6 +8,10 @@ router.get("/login", function (req, res) {
   res.render("user_login");
 });
 
+router.get("/signin", function (req, res) {
+  res.render("signIn");
+});
+
 router.get('/profile', function(req, res) {
     res.send('This is profile page');
 });

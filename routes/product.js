@@ -52,7 +52,7 @@ router.get("/", userIsLoggedIn, async function (req, res) {
   }, {});
 
   // Render the page with cart information and product data
-  res.render("index", { products: resultObject, rnproducts, somethingInCart, cartCount, userid, address });
+  res.render("index", { products: resultObject, rnproducts, somethingInCart, cartCount, userid, address, cart});
 });
 
 

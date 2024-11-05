@@ -193,38 +193,73 @@
     }
   </style>
 </head>
+
 <body>
   <h1>My Orders</h1>
   <div class="header">
     <input type="text" class="search-bar" placeholder="Search all orders">
   </div>
 
-  
-
   <% if (orders && orders.length > 0) { %>
+    <% 
+      // Sort orders by createdAt date in descending order (newest first)
+      orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    %>
+    
     <% orders.forEach((order, index) => { %>
       <div class="order-card">
         <div class="order-header">
           <h2>Order <%= index + 1 %> (ID: <%= order._id %>)</h2>
-          <% 
-            // Randomly decide if the order arrives tomorrow or a random date
-            let arrivalDate;
-            const randomChance = Math.random(); // Generates a number between 0 and 1
-            if (randomChance < 0.5) { // 50% chance for arriving tomorrow
-              arrivalDate = new Date();
-              arrivalDate.setDate(arrivalDate.getDate() + 1); // Set to tomorrow
-              %>
-              <span class="order-status">Arriving Tomorrow</span>
-          <% } else { 
-              // Randomly choose a date between 2 to 5 days from order date
-              const daysToAdd = Math.floor(Math.random() * 4) + 2; // Random number between 2 and 5
-              arrivalDate = new Date(order.createdAt);
-              arrivalDate.setDate(arrivalDate.getDate() + daysToAdd);
-              %>
-              <span class="order-status">Arriving on: <%= arrivalDate.toLocaleDateString() %></span>
-          <% } %>
+          
+          <!-- Store the arrival date logic in JavaScript -->
+          <script>
+            (function() {
+              const orderId = "<%= order._id %>";
+              const storageKey = `order_${orderId}_arrivalDate`;
+              let arrivalDate;
+              
+              // Check if the arrival date is already in localStorage
+              if (localStorage.getItem(storageKey)) {
+                arrivalDate = new Date(localStorage.getItem(storageKey));
+              } else {
+                // Calculate a new arrival date and store it
+                const randomChance = Math.random();
+                arrivalDate = new Date();
+                
+                if (randomChance < 0.5) {
+                  arrivalDate.setDate(arrivalDate.getDate() + 1); // Set for tomorrow
+                } else {
+                  const daysToAdd = Math.floor(Math.random() * 4) + 2;
+                  arrivalDate = new Date("<%= order.createdAt %>");
+                  arrivalDate.setDate(arrivalDate.getDate() + daysToAdd);
+                }
+                
+                // Save the calculated arrival date in localStorage
+                localStorage.setItem(storageKey, arrivalDate.toISOString());
+              }
+              
+              // Get today's date without the time part for comparison
+              const today = new Date();
+              today.setHours(0, 0, 0, 0); // Reset time to midnight
+              const tomorrow = new Date(today);
+              tomorrow.setDate(today.getDate() + 1); // Calculate tomorrow's date
+
+              // Determine the message to display
+              let statusMessage;
+              if (arrivalDate.toDateString() === tomorrow.toDateString()) {
+                statusMessage = "Arriving Tomorrow"; // If the delivery date is tomorrow
+              } else {
+                statusMessage = `Arriving on: ${arrivalDate.toLocaleDateString()}`; // Otherwise, show the full date
+              }
+
+              // Display the arrival status
+              document.write(`
+                <span class="order-status">${statusMessage}</span>
+              `);
+            })();
+          </script>
         </div>
-        <p class="order-date">Placed on: <%= order.createdAt.toLocaleDateString() %> at <%= order.createdAt.toLocaleTimeString() %></p>
+        <p class="order-date">Placed on: <%= new Date(order.createdAt).toLocaleDateString() %> at <%= new Date(order.createdAt).toLocaleTimeString() %></p>
         
         <ul class="product-list">
           <% order.products.forEach(product => { %>
@@ -246,4 +281,7 @@
     <p class="empty-message">You have no orders.</p>
   <% } %>
 </body>
+
+
+
 </html>

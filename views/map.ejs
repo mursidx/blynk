@@ -8,25 +8,40 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Full page map container */
         #map {
             height: 100vh;
             width: 100%;
+            position: relative;
+            /* This ensures the button can be placed absolutely within the map container */
         }
 
-        #inputs {
-            margin: 20px 0;
-        }
-
+        /* Autocomplete suggestions */
         .autocomplete-suggestions {
-            border: 1px solid #ddd;
+            /* border: 1px solid #ddd; */
             max-height: 150px;
             overflow-y: auto;
             background-color: white;
         }
 
         .autocomplete-suggestion {
+            border-bottom: 1px solid #ddd;
+            /* Only bottom border */
             padding: 8px;
             cursor: pointer;
+
         }
 
         .autocomplete-suggestion:hover {
@@ -36,22 +51,126 @@
         .leaflet-top+.leaflet-right {
             display: none;
         }
+
+        /* Position the 'Use Current Location' button at the bottom right */
+        #useCurrentLocation {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 50px;
+            /* Equal width and height */
+            height: 50px;
+            /* Equal width and height */
+            border: none;
+            background-color: rgb(255, 255, 255);
+            border-radius: 50%;
+            /* Makes the button round */
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Centers the image within the button */
+            padding: 0;
+            box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+
+
+        #inputs {
+            background-color: white;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            /* Position at the top */
+            left: 0;
+            /* Align to the left side */
+            z-index: 1000;
+            /* Ensure it stays above other elements */
+            /* background-color: white; */
+            /* Optional: Background color */
+            padding: 5px 10px;
+            /* Optional: Padding for styling */
+            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+            /* Optional: Add shadow for better separation */
+        }
+
+        .input-container {
+            position: relative;
+            width: 90%;
+        }
+
+        #submitBtn {
+            position: absolute;
+            top: 50%;
+            right: 0px;
+            /* Aligns the button to the right of the input */
+            transform: translateY(-50%);
+            width: 60px;
+            /* Width and height for a circular button */
+            height: 40px;
+            background-color: #007bff;
+            /* Primary color for the button */
+            border: none;
+            border-radius: 0px 50px 50px 0;
+            /* Makes the button round */
+            cursor: pointer;
+            color: white;
+            /* Color for the icon */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Centers the icon inside */
+            font-size: 16px;
+            /* Icon size */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            /* Adds slight shadow */
+        }
+
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #end {
+            padding: 8px;
+            width: 100%;
+            height: 6vh;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            padding-right: 45px;
+            /* Space for the button on the right */
+        }
+
+        .leaflet-control-container {
+            display: none;
+        }
     </style>
-</head>
 
 <body>
 
     <div id="inputs">
         <form method="post" action="/order/address/<%= orderid %>">
-            <label for="end">Destination:</label>
-            <input type="text" name="address" id="end" placeholder="Enter destination">
+            <div class="input-container">
+                <input type="text" name="address" id="end" placeholder="Enter destination">
+                <button type="submit" id="submitBtn">submit</button>
+            </div>
             <div id="suggestions" class="autocomplete-suggestions"></div>
-            <button type="button" id="useCurrentLocation">Use Current Location</button>
-            <input type="submit" value="get order">
         </form>
     </div>
 
+    <!-- Map container -->
     <div id="map"></div>
+    <button type="button" id="useCurrentLocation">
+        <img src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/gm_my_location_gm_blue_24dp.png"
+            alt="Use Current Location" style="width: 24px; height: 24px;">
+    </button>
+
+
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>

@@ -7,6 +7,7 @@ const { cartModel } = require("../models/cart");
 const { userModel } = require("../models/user");
 const { productModel } = require("../models/product");
 const router = express.Router(); // Create a router instance
+const { userIsLoggedIn } = require("../middlewares/admin");
 
 router.get(
   "/:userid/:orderid/:paymentid/:signature",
@@ -73,17 +74,66 @@ router.post("/address/:orderid", async function (req, res) {
   res.redirect("/order");
 });
 
-router.get("/", async function (req, res) {
-  try {
-    // Populate products in each order to get full product details
-    let orders = await orderModel.find({ user: req.session.passport.user }).populate('products');
+// router.get("/", userIsLoggedIn ,async function (req, res) {
+//   try {
+//     // Populate products in each order to get full product details
+//     let orders = await orderModel.find({ user: req.session.passport.user }).populate('products');
 
-    res.render('myOrders', { orders }); // Directly pass populated orders to template
+//     res.render('myOrders', { orders }); // Directly pass populated orders to template
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server Error, please login");
+//   }
+// });
+
+
+router.get("/", userIsLoggedIn, async function (req, res) {
+  try {
+    let userid = req.session.passport.user;
+    let user = await userModel.findOne({ _id: userid });
+    let orders = await orderModel
+      .find({ user: req.session.passport.user })
+      .populate("products");
+
+    let allOrdersData = orders.map(order => {
+      let orderDataStructure = {};
+
+      // Count the products in the order
+      order.products.forEach((product) => {
+        let key = String(product._id);
+        if (orderDataStructure[key]) {
+          orderDataStructure[key].quantity += 1;
+        } else {
+          orderDataStructure[key] = {
+            ...product._doc || product, 
+            quantity: 1,
+          };
+        }
+      });
+
+      let finalarray = Object.values(orderDataStructure);
+
+      // Calculate the order count
+      let orderCount = finalarray.reduce((total, product) => total + product.quantity, 0);
+
+      return {
+        _id: order._id,
+        createdAt: order.createdAt, // Ensure createdAt is available in the order data
+        products: finalarray,
+        totalprice: order.totalprice,
+        orderCount,
+      };
+    });
+
+    // Render the order view with all orders
+    res.render("myOrders", { orders: allOrdersData, userid, user });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error, please login");
+    res.send(error.message);
   }
 });
+
+
+
 
 
 

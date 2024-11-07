@@ -24,7 +24,7 @@
                         class="w-10 h-10 flex items-center justify-center rounded bg-zinc-100 text-2xl ri-timer-line"></i>
                     <div>
                         <p class="text-sm font-medium">Delivery in <%= Math.floor((Math.random()*10)+3) %> minutes</p>
-                        <p class="text-xs text-gray-500">Shipment of 1 item</p>
+                        <p class="text-xs text-gray-500">Shipment of <%= cartCount %> item</p>
                     </div>
                 </div>
                 <% cart.forEach(elem=> { %>

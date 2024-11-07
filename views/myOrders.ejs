@@ -123,22 +123,7 @@
       font-size: 0.85rem;
     }
 
-    /* Reorder button */
-    .reorder-button {
-      position: absolute;
-      right: 0;
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
 
-    .reorder-button:hover {
-      background-color: #0056b3;
-    }
 
     /* Buy Again Section */
     .suggestions {
@@ -228,79 +213,89 @@
     %>
     
     <% orders.forEach((order, index) => { %>
-      <div class="order-card">
-        <div class="order-header">
-          <h2>Order <%= index + 1 %> (ID: <%= order._id %>)</h2>
+      <div class="order-card p-4 mb-6 bg-white rounded-lg shadow-md">
+        <div class="order-header flex items-center justify-between">
+          <h2>Order <%= index + 1 %> (ID: #<%= String(order._id).slice(-5) %>)</h2>
+
+
           
-          <!-- Store the arrival date logic in JavaScript -->
+          <!-- Dynamic arrival date display using localStorage -->
           <script>
             (function() {
               const orderId = "<%= order._id %>";
               const storageKey = `order_${orderId}_arrivalDate`;
               let arrivalDate;
               
-              // Check if the arrival date is already in localStorage
               if (localStorage.getItem(storageKey)) {
                 arrivalDate = new Date(localStorage.getItem(storageKey));
               } else {
-                // Calculate a new arrival date and store it
                 const randomChance = Math.random();
                 arrivalDate = new Date();
                 
                 if (randomChance < 0.5) {
-                  arrivalDate.setDate(arrivalDate.getDate() + 1); // Set for tomorrow
+                  arrivalDate.setDate(arrivalDate.getDate() + 1); 
                 } else {
                   const daysToAdd = Math.floor(Math.random() * 4) + 2;
                   arrivalDate = new Date("<%= order.createdAt %>");
                   arrivalDate.setDate(arrivalDate.getDate() + daysToAdd);
                 }
                 
-                // Save the calculated arrival date in localStorage
                 localStorage.setItem(storageKey, arrivalDate.toISOString());
               }
               
-              // Get today's date without the time part for comparison
               const today = new Date();
-              today.setHours(0, 0, 0, 0); // Reset time to midnight
+              today.setHours(0, 0, 0, 0); 
               const tomorrow = new Date(today);
-              tomorrow.setDate(today.getDate() + 1); // Calculate tomorrow's date
-
-              // Determine the message to display
+              tomorrow.setDate(today.getDate() + 1);
+  
               let statusMessage;
               if (arrivalDate.toDateString() === tomorrow.toDateString()) {
-                statusMessage = "Arriving Tomorrow"; // If the delivery date is tomorrow
+                statusMessage = "Arriving Tomorrow"; 
               } else {
-                statusMessage = `Arriving on: ${arrivalDate.toLocaleDateString()}`; // Otherwise, show the full date
+                statusMessage = `Arriving on: ${arrivalDate.toLocaleDateString()}`; 
               }
-
-              // Display the arrival status
-              document.write(`
-                <span class="order-status">${statusMessage}</span>
-              `);
+  
+              document.write(`<span class="order-status text-sm ">${statusMessage}</span>`);
             })();
           </script>
         </div>
-        <p class="order-date">Placed on: <%= new Date(order.createdAt).toLocaleDateString() %> at <%= new Date(order.createdAt).toLocaleTimeString() %></p>
         
-        <ul class="product-list">
+        <!-- Display order date and time correctly -->
+        <p class="order-date text-sm text-gray-500">
+          Placed on: <%= new Date(order.createdAt).toLocaleDateString() %> at <%= new Date(order.createdAt).toLocaleTimeString() %>
+        </p>
+        
+        <!-- Product list for each order -->
+        <ul class="product-list mt-4">
           <% order.products.forEach(product => { %>
-            <li class="product-item">
+            <li class="product-item flex items-center mt-4">
               <img src="data:image/jpg;base64,<%= product.image.toString('base64') %>" 
                    alt="<%= product.name %>" 
-                   class="product-image">
-              <div class="product-details">
-                <span class="product-name"><%= product.name %></span>
-                <span class="product-price">$<%= product.price %></span>
+                   class="product-image w-16 h-16 rounded">
+              <div class="product-details ml-4">
+                <span class="product-name block font-medium"><%= product.name %></span>
+                <span class="product-price text-gray-600">₹<%= Number(product.price) * Number(product.quantity) %></span>
               </div>
-              <div class="reorder-button">Reorder</div>
+              <div class="ml-auto">
+                <p>Quantity: <%= product.quantity %></p>
+              </div>
             </li>
           <% }) %>
         </ul>
+        
+        <div class="order-summary mt-4 flex justify-between items-center">
+          <span class="text-green-400">Total price: ₹<%= order.totalprice %></span>
+          <span class="text-gray-500"> | </span>
+          <span class="text-green-400">Order count: <%= order.orderCount %></span>
+        </div>
       </div>
+      <hr class="my-4">
     <% }) %>
   <% } else { %>
-    <p class="empty-message">You have no orders.</p>
+    <p class="empty-message text-center text-gray-500 mt-8">You have no orders.</p>
   <% } %>
+  
+    
 </body>
 
 </html>

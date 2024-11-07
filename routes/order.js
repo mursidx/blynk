@@ -32,7 +32,7 @@ router.get(
           user: req.params.userid,
           products: userCart.products,
           totalprice: userCart.totalprice,
-          status: "pending",
+          status: "processing",
           payment: paymentDetails._id,
           address: user.address,
         });
@@ -42,7 +42,7 @@ router.get(
           user: req.params.userid,
           products: userCart.products,
           totalprice: userCart.totalprice,
-          status: "pending",
+          status: "processing",
           payment: paymentDetails._id,
         });
       }
@@ -122,8 +122,11 @@ router.get("/", userIsLoggedIn, async function (req, res) {
         products: finalarray,
         totalprice: order.totalprice,
         orderCount,
+        status: order.status, 
       };
     });
+
+    
 
     // Render the order view with all orders
     res.render("myOrders", { orders: allOrdersData, userid, user });

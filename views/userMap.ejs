@@ -25,7 +25,6 @@
             height: 100vh;
             width: 100%;
             position: relative;
-            /* This ensures the button can be placed absolutely within the map container */
         }
 
         /* Autocomplete suggestions */
@@ -82,50 +81,36 @@
             width: 100vw;
             position: fixed;
             top: 0;
-            /* Position at the top */
             left: 0;
-            /* Align to the left side */
             z-index: 1000;
-            /* Ensure it stays above other elements */
-            /* background-color: white; */
-            /* Optional: Background color */
             padding: 5px 10px;
-            /* Optional: Padding for styling */
-            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
-            /* Optional: Add shadow for better separation */
         }
 
         .input-container {
-            position: relative;
-            width: 90%;
-        }
+        position: relative;
+        width: 90%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
 
-        #submitBtn {
-            position: absolute;
-            top: 50%;
-            right: 0px;
-            /* Aligns the button to the right of the input */
-            transform: translateY(-50%);
-            width: 60px;
-            /* Width and height for a circular button */
-            height: 40px;
-            background-color: #007bff;
-            /* Primary color for the button */
-            border: none;
-            border-radius: 0px 50px 50px 0;
-            /* Makes the button round */
-            cursor: pointer;
-            color: white;
-            /* Color for the icon */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Centers the icon inside */
-            font-size: 16px;
-            /* Icon size */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            /* Adds slight shadow */
-        }
+    #submitBtn {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 40px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 0px 50px 50px 0;
+        cursor: pointer;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
 
         form {
@@ -137,14 +122,13 @@
         }
 
         #end {
-            padding: 8px;
-            width: 100%;
-            height: 6vh;
-            border-radius: 50px;
-            border: 1px solid #ddd;
-            padding-right: 45px;
-            /* Space for the button on the right */
-        }
+        padding: 8px;
+        width: 100%;
+        height: 40px; /* Adjusted height for a better fit */
+        border-radius: 25px; /* Adjusted for smoother round edges */
+        border: 1px solid #ddd;
+        padding-right: 70px; /* Space for the button on the right */
+    }
 
         .leaflet-control-container {
             display: none;

@@ -41,8 +41,12 @@ router.post('/address/:userid',async function(req, res){
 
 
   router.get('/profile/:userid', async function (req, res) {
+    const { userid } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(userid)) {
+      return res.status(400).send('Invalid user ID');
+    }
     try {
-      let user = await userModel.findOne({ _id: req.params.userid });
+      let user = await userModel.findOne({ _id: userid });
       if (!user) {
         return res.status(404).send('User not found');
       }
@@ -52,6 +56,7 @@ router.post('/address/:userid',async function(req, res){
       res.status(500).send('Server Error');
     }
   });
+  
 
   // Edit Profile Route
 router.get('/profile/edit/:userid', async function (req, res) {

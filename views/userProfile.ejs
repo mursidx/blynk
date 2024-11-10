@@ -1,99 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Reset */
+        body {
+            background-color: #f3f4f6;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: #fff;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .profile-header .back-icon {
+            font-size: 1.5rem;
+            color: #333;
+            margin-right: 1rem;
+        }
+
+        .profile-header .points {
+            color: #fbc02d;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .profile-header .membership {
+            font-size: 0.9rem;
+            color: #3b82f6;
+            margin-top: -5px;
+        }
+
+        .edit-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #3b82f6;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Profile Actions */
+        .profile-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: #fff;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .profile-action-item {
+            flex: 1 1 48%;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        .profile-action-item i {
+            display: block;
+            font-size: 1.5rem;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Section Styling */
+        .section-card {
+            background-color: #fff;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-card h5 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .section-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            color: #374151;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .section-item:first-child {
+            border-top: none;
+        }
+
+        .section-item i {
+            font-size: 1.2rem;
+            color: #3b82f6;
+            margin-right: 0.75rem;
+        }
+
+        .section-item .details {
+            flex-grow: 1;
+        }
+
+        .section-item .details small {
+            display: block;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        /* Remove text decoration from all anchor tags within the section-card */
+        .section-card a {
+            text-decoration: none;
+            /* Removes underline from links */
+            color: inherit;
+            /* Makes the text color inherit from its parent */
+        }
+
+        .section-card a:hover {
+            text-decoration: none;
+            /* Ensures no underline on hover */
+        }
+        a{
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- Navbar (Optional, if you want to add a consistent header) -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Your App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/profile/<%= user._id %>">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
+    <!-- Header with Edit Icon -->
+    <div class="profile-header">
+        <a href="javascript:history.back()" class="back-icon"><i class="ri-arrow-left-s-line"></i></a>
+        <div>
+            <h5>Hey! <%= user.name %>
+            </h5>
+            <span class="membership"><i class="fas fa-crown"></i> Premium Member</span>
         </div>
+        <!-- Edit icon link to profile edit page -->
+        <a href="/users/profile/edit/<%= user._id %>" class="edit-icon"><i class="fas fa-edit"></i></a>
     </div>
-</nav>
 
-<!-- User Profile Section -->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header text-center">
-                    <h4>User Profile</h4>
+    <!-- Profile Actions -->
+    <div class="container">
+        <div class="profile-actions">
+            <a href="/order" class="profile-action-item">
+                <i class="fas fa-box"></i>
+                Orders
+            </a>
+            
+            <div class="profile-action-item">
+                <i class="fas fa-heart"></i>
+                Wishlist
+            </div>
+            <a href="https://www.joinhoney.com/" target="_blank" class="profile-action-item">
+                <i class="fas fa-tag"></i>
+                Coupons
+            </a>
+            
+            <a href="mailto:iammursid@gmail.com?subject=Inquiry&body=Hello, I would like to know more about..." target="_blank" class="profile-action-item">
+                <i class="fas fa-headset"></i>
+                Help Center
+            </a>
+        </div>
+
+        <!-- Credit Options Section -->
+        <div class="section-card">
+            <h5>Credit Options</h5>
+            <div class="section-item">
+                <i class="fas fa-money-check-alt"></i>
+                <div class="details">
+                    <a href="https://snapmint.com/login?srsltid=AfmBOoqZRy3FrJx2SjJFtxkd7hGLX-THybJqfJJZ_TB6bNdBAgvvYMA1" target="_blank">Cash loan up to ₹10,00,000</a>
+                    <small>100% Digital | Instant Approval</small>
                 </div>
-                <div class="card-body">
-                    <h5 class="text-center"><%= user.name %></h5>
-                    <p class="text-center text-muted"><%= user.email %></p>
-                    <div class="d-flex justify-content-between">
-                        <p><strong>Phone:</strong> <%= user.phone %></p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <p><strong>Address:</strong> <%= user.address %></p>
-                    </div>
-                    <div class="text-center mt-3">
-                        <a href="/users/profile/edit/<%= user._id %>" class="btn btn-primary">Edit Profile</a>
-                    </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="section-item">
+                <i class="fas fa-credit-card"></i>
+                <div class="details">
+                    <a href="https://www.axisbank.com/retail/cards/credit-card/flipkart-axisbank-credit-card" target="_blank">Blynk Axis Bank Credit Card</a>
                 </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="section-item">
+                <i class="fas fa-wallet"></i>
+                <div class="details">
+                    <a href="https://lazypay.in/pay-later" target="_blank">Blynk Pay Later</a>
+                    <small>Available Balance: ₹45000.00. Shop Now</small>
+                </div>
+                <i class="fas fa-chevron-right"></i>
             </div>
         </div>
 
-        <!-- Order History (Optional) -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Order History</h5>
+
+
+        <!-- Credit Score Section -->
+        <div class="section-card">
+            <h5>Credit Score</h5>
+            <div class="section-item">
+                <i class="fas fa-chart-line"></i>
+                <div class="details">
+                    <a href="https://www.paisabazaar.com/cibil-credit-report/" target="_blank">Free credit score check</a>
+                    <small>Get detailed credit report instantly/small>
                 </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Order ID</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example Static Data, Replace with real data -->
-                            <tr>
-                                <td>ORD123456</td>
-                                <td>2024-11-01</td>
-                                <td>Shipped</td>
-                                <td>$200</td>
-                            </tr>
-                            <tr>
-                                <td>ORD789012</td>
-                                <td>2024-10-15</td>
-                                <td>Delivered</td>
-                                <td>$150</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="text-center mt-3">
-                        <a href="/orders" class="btn btn-secondary">View All Orders</a>
-                    </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div class="section-card">
+            <h5>Notifications</h5>
+            <div class="section-item">
+                <i class="fas fa-bell"></i>
+                <div class="details">
+                    Tap for latest updates and offers
                 </div>
+                <i class="fas fa-chevron-right"></i>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

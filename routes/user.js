@@ -13,11 +13,6 @@ router.get("/signin", function (req, res) {
   res.render("signIn");
 });
 
-router.get('/profile', function(req, res) {
-    res.send('This is profile page');
-});
-
-
 router.get("/logout", function (req, res, next) {
   req.logout(function (err) {
     if (err) {
@@ -34,13 +29,17 @@ router.get("/logout", function (req, res, next) {
 //profile router
 router.get('/profile/:userid', userIsLoggedIn, async function (req, res) {
   try {
-      let user = await userModel.findOne({ _id: req.params.userid });
-      res.render('userProfile', { user });
+    let user = await userModel.findOne({ _id: req.params.userid });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.render('userProfile', { user });
   } catch (error) {
-      console.error(error);
-      res.status(500).send('Server Error');
+    console.error(error);
+    res.status(500).send('Server Error');
   }
 });
+
 
 
 // Edit Profile Route

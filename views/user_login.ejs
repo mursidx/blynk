@@ -129,6 +129,40 @@
         .fab.fa-google {
             color: black;
         }
+
+        /* CSS for the warning overlay */
+        #inAppBrowserWarning {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        #inAppBrowserWarning button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3a7e99;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #inAppBrowserWarning button:hover {
+            background-color: #2e6477;
+        }
     </style>
 </head>
 <body>
@@ -150,5 +184,80 @@
             </h3>
         </div>
     </div>
+
+    <script>
+        // Function to check if the user is in the LinkedIn in-app browser
+        function isInLinkedInApp() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return /LinkedIn/i.test(userAgent); // Detects LinkedIn app's internal browser
+        }
+
+        // Function to handle the opening of the page in an external browser (can vary by platform)
+        function openInExternalBrowser() {
+            window.open("https://www.example.com", "_blank");  // Modify with your actual URL
+        }
+
+        // Function to check if the user is in an in-app browser (e.g., Facebook, Instagram, etc.)
+        function isInAppBrowser() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
+            const isMobileSafari = /^((?!chrome|android).)*safari/i.test(userAgent) && /iPhone|iPad|iPod/i.test(userAgent);
+
+            return (
+                inAppKeywords.test(userAgent) ||
+                (userAgent.includes("wv") && !isMobileSafari) ||
+                userAgent.includes("Version/") && userAgent.includes("Mobile/")
+            );
+        }
+
+        function openInExternalBrowser() {
+    const externalUrl = "https://blynk.mursid.site";
+    
+    if (navigator.share) {
+        // Try opening the external link via the native share sheet, which usually defaults to an external browser.
+        navigator.share({ url: externalUrl });
+    } else {
+        // Fallback: Open with a new tab/window
+        const newWindow = window.open(externalUrl, "_blank");
+        
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+            // If the pop-up was blocked or failed to open, suggest copying the URL.
+            alert("Please copy the URL and paste it into your browser's address bar.");
+        } else {
+            // Ensure the window is opened successfully
+            setTimeout(() => {
+                if (newWindow.closed) {
+                    alert("Failed to open the external browser.");
+                }
+            }, 2000);
+        }
+    }
+}
+
+// Check if the user is in the LinkedIn app and update the DOM accordingly
+if (isInLinkedInApp()) {
+    // Create the warning message dynamically to avoid overwriting other content
+    const warningMessage = document.createElement("div");
+    warningMessage.id = "inAppBrowserWarning";
+    warningMessage.innerHTML = `
+        <h2>Please Open in an External Browser</h2>
+        <p>For the best experience, please open this page in an external browser like Chrome or Safari.</p>
+        <button onclick="openInExternalBrowser()">Open in External Browser</button>
+    `;
+    
+    // Append the warning message to the body
+    document.body.appendChild(warningMessage);
+
+    // Ensure the warning message is visible after insertion
+    setTimeout(() => {
+        warningMessage.style.display = "flex";
+    }, 0); // This ensures the element is fully rendered before applying styles
+} else {
+    console.log('You are using an external browser.');
+}
+
+        // Check if the user is in any in-app browser and show warning
+
+    </script>
 </body>
 </html>

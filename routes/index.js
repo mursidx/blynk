@@ -83,5 +83,11 @@ router.get('/profile/edit/:userid', async function (req, res) {
         res.status(500).send('Server Error');
     }
   });
+
+
+
+  router.get('/test', function(req, res){
+    res.render('test')
+  })
   
 module.exports = router;

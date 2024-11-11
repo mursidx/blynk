@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blynk by Mursid</title>
+    <link rel="icon" href="https://gplclub.co/wp-content/uploads/2024/11/apple-touch-icon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            background-image: url("https://gplclub.co/wp-content/uploads/2024/11/bg.webp");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #login-logo {
+            width: 30vw;
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        #top-div {
+            height: 60vh;
+            width: 100vw;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #bottom-div {
+            height: 40vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #bottom-top {
+            width: 100vw;
+            height: 40%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        #bottom-bottom {
+            width: 100vw;
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 15px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            color: white;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #27346f;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        button i {
+            margin-left: 8px;
+        }
+
+        button:hover {
+            background-color: #99a4b6;
+        }
+
+        @media (max-width: 600px) {
+            #login-logo {
+                width: 70vw;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+
+        .fab.fa-google {
+            color: black;
+        }
+
+        /* CSS for the warning overlay */
+        #inAppBrowserWarning {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        #inAppBrowserWarning button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3a7e99;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #inAppBrowserWarning button:hover {
+            background-color: #2e6477;
+        }
+    </style>
+</head>
+<body>
+    <div id="top-div">
+        <img id="login-logo" src="https://gplclub.co/wp-content/uploads/2024/11/blynk-logo-copy-2-white.webp" alt="Blynk Logo" />
+    </div>
+    <div id="bottom-div">
+        <div id="bottom-top"></div>
+        <div id="bottom-bottom">
+            <h1>Let's Get Started!</h1>
+            <a href="/auth/google" style="text-decoration: none">
+                <button>
+                    <img src="https://www.svgrepo.com/show/303108/google-icon-logo.svg" alt="Google Icon" style="width: 30px; margin-right: 8px" />
+                    Continue with Google
+                </button>
+            </a>
+            <h3>
+                <a href="/users/signin" style="color: rgb(58, 126, 153); text-decoration: none"></a>
+            </h3>
+        </div>
+    </div>
+
+    <script>
+        // Function to check if the user is in the LinkedIn in-app browser
+        function isInLinkedInApp() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return /LinkedIn/i.test(userAgent); // Detects LinkedIn app's internal browser
+        }
+
+        // Function to handle the opening of the page in an external browser (can vary by platform)
+        function openInExternalBrowser() {
+            window.open("https://www.example.com", "_blank");  // Modify with your actual URL
+        }
+
+        // Function to check if the user is in an in-app browser (e.g., Facebook, Instagram, etc.)
+        function isInAppBrowser() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
+            const isMobileSafari = /^((?!chrome|android).)*safari/i.test(userAgent) && /iPhone|iPad|iPod/i.test(userAgent);
+
+            return (
+                inAppKeywords.test(userAgent) ||
+                (userAgent.includes("wv") && !isMobileSafari) ||
+                userAgent.includes("Version/") && userAgent.includes("Mobile/")
+            );
+        }
+
+        // Check if the user is in the LinkedIn app and update the DOM accordingly
+        if (isInLinkedInApp()) {
+            const warningMessage = `
+                <div id="inAppBrowserWarning">
+                    <h2>Please Open in an External Browser</h2>
+                    <p>For the best experience, please open this page in an external browser like Chrome or Safari.</p>
+                    <button onclick="openInExternalBrowser()">Open in External Browser</button>
+                </div>
+            `;
+            
+            // Insert the warning message into the body of the page
+            document.body.innerHTML += warningMessage;
+
+            // Now that the element is in the DOM, change its style
+            document.getElementById("inAppBrowserWarning").style.display = "flex";
+        } else {
+            console.log('You are using an external browser.');
+        }
+
+        // Check if the user is in any in-app browser and show warning
+
+    </script>
+</body>
+</html>

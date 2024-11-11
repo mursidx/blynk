@@ -189,15 +189,13 @@
         // Function to check if the user is in the LinkedIn in-app browser
         function isInLinkedInApp() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            return /LinkedIn/i.test(userAgent); // Detects LinkedIn app's internal browser
+            return /LinkedIn/i.test(userAgent); 
         }
 
-        // Function to handle the opening of the page in an external browser (can vary by platform)
         function openInExternalBrowser() {
-            window.open("https://www.example.com", "_blank");  // Modify with your actual URL
+            window.open("https://www.example.com", "_blank"); 
         }
 
-        // Function to check if the user is in an in-app browser (e.g., Facebook, Instagram, etc.)
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
@@ -214,17 +212,15 @@ function openInExternalBrowser() {
     const externalUrl = "https://blynk.mursid.site";
     
     if (navigator.share) {
-        // Try opening the external link via the native share sheet, which usually defaults to an external browser.
+       
         navigator.share({ url: externalUrl });
     } else {
-        // Fallback: Open with a new tab/window
+       
         const newWindow = window.open(externalUrl, "_blank");
         
         if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
-            // If the pop-up was blocked or failed to open, suggest copying the URL.
             alert("Please copy the URL and paste it into your browser's address bar.");
         } else {
-            // Ensure the window is opened successfully
             setTimeout(() => {
                 if (newWindow.closed) {
                     alert("Failed to open the external browser.");
@@ -236,7 +232,6 @@ function openInExternalBrowser() {
 
 // Check if the user is in the LinkedIn app and update the DOM accordingly
 if (isInLinkedInApp()) {
-    // Create the warning message dynamically to avoid overwriting other content
     const warningMessage = document.createElement("div");
     warningMessage.id = "inAppBrowserWarning";
     warningMessage.innerHTML = `
@@ -245,18 +240,16 @@ if (isInLinkedInApp()) {
         <button onclick="openInExternalBrowser()">Open in External Browser</button>
     `;
     
-    // Append the warning message to the body
     document.body.appendChild(warningMessage);
 
-    // Ensure the warning message is visible after insertion
     setTimeout(() => {
         warningMessage.style.display = "flex";
-    }, 0); // This ensures the element is fully rendered before applying styles
+    }, 0);
 } else {
     console.log('You are using an external browser.');
 }
 
-        // Check if the user is in any in-app browser and show warning
+       
 
     </script>
 </body>

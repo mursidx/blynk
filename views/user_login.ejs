@@ -195,15 +195,15 @@
     <script>
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
-            const isMobileSafari = /^((?!chrome|android).)*safari/i.test(userAgent) && /iPhone|iPad|iPod/i.test(userAgent);
 
-            // Detect common in-app browsers and exclude regular Chrome, Firefox, Safari, Edge, etc.
-            return (
-                inAppKeywords.test(userAgent) ||
-                (userAgent.includes("wv") && !isMobileSafari) ||
-                userAgent.includes("Version/") && userAgent.includes("Mobile/")
-            );
+            // Common in-app browser keywords
+            const inAppKeywords = /Instagram|FBAN|FBAV|LinkedIn|Line|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
+            
+            // Known browser keywords (to exclude Chrome, Safari, Firefox, etc.)
+            const excludedBrowsers = /Chrome|Safari|Firefox|Edge|SamsungBrowser|CriOS|FxiOS/;
+
+            // Detect if it's a WebView (in-app browser) and not a standard external browser
+            return inAppKeywords.test(userAgent) && !excludedBrowsers.test(userAgent);
         }
 
         function openInExternalBrowser() {
@@ -221,6 +221,7 @@
             }
         }
 
+        // Show warning only if detected as an in-app browser
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

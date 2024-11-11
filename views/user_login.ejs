@@ -190,37 +190,30 @@
         <h2>Please Open in an External Browser</h2>
         <p>For the best experience, please open this page in an external browser like Chrome or Safari.</p>
         <button onclick="openInExternalBrowser()">Open in External Browser</button>
+        <p style="font-size: 12px; color: #aaa;">If the button doesn't work, copy this URL and paste it in Chrome or Safari: <br> <code>https://blynk.mursid.site</code></p>
     </div>
 
     <script>
+        // Function to detect specific in-app browsers (LinkedIn, Instagram, etc.)
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
-            const isMobileSafari = /^((?!chrome|android).)*safari/i.test(userAgent) && /iPhone|iPad|iPod/i.test(userAgent);
-
-            // Detect common in-app browsers and exclude regular Chrome, Firefox, Safari, Edge, etc.
-            return (
-                inAppKeywords.test(userAgent) ||
-                (userAgent.includes("wv") && !isMobileSafari) ||
-                userAgent.includes("Version/") && userAgent.includes("Mobile/")
-            );
+            
+            // Detecting Instagram, LinkedIn, and Facebook in-app browsers
+            return /Instagram|FBAN|FBAV|LinkedIn/.test(userAgent);
         }
 
+        // Function to try opening the link in an external browser
         function openInExternalBrowser() {
             const externalUrl = "https://blynk.mursid.site";
-            
-            if (navigator.share) {
-                // Try opening the external link via the native share sheet, which usually defaults to an external browser.
-                navigator.share({ url: externalUrl });
-            } else {
-                // Fallback: Open with a new tab/window
-                const newWindow = window.open(externalUrl, "_blank");
-                if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
-                    alert("Please copy the URL and paste it into your browser's address bar.");
-                }
+            const newWindow = window.open(externalUrl, "_blank");
+
+            // If the new window is blocked or fails to open, show a manual prompt
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+                alert("Please copy the URL and open it in an external browser like Chrome or Safari.");
             }
         }
 
+        // Show warning if detected as an in-app browser
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

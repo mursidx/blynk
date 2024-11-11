@@ -198,8 +198,12 @@
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             
-            // Detecting Instagram, LinkedIn, and Facebook in-app browsers
-            return /Instagram|FBAN|FBAV|LinkedIn/.test(userAgent);
+            // Specific keywords for detecting in-app WebViews and excluding common external browsers
+            const inAppKeywords = /Instagram|FBAN|FBAV|LinkedIn/i;
+            const isChromeOrSafariOrFirefox = /(Chrome|Safari|Firefox)/i.test(userAgent);
+
+            // If in-app keyword is found and not in standard Chrome, Safari, or Firefox, return true
+            return inAppKeywords.test(userAgent) && !isChromeOrSafariOrFirefox;
         }
 
         // Function to try opening the link in an external browser
@@ -213,7 +217,7 @@
             }
         }
 
-        // Show warning if detected as an in-app browser
+        // Show warning only if detected as an in-app browser
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

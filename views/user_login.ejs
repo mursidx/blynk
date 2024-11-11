@@ -129,6 +129,40 @@
         .fab.fa-google {
             color: black;
         }
+
+        /* test */
+        #inAppBrowserWarning {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        #inAppBrowserWarning button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3a7e99;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #inAppBrowserWarning button:hover {
+            background-color: #2e6477;
+        }
     </style>
 </head>
 <body>
@@ -150,5 +184,33 @@
             </h3>
         </div>
     </div>
+
+    <!-- Warning message for in-app browsers -->
+    <div id="inAppBrowserWarning">
+        <h2>Please Open in an External Browser</h2>
+        <p>For the best experience, please open this page in an external browser like Chrome or Safari.</p>
+        <button onclick="openInExternalBrowser()">Open in External Browser</button>
+    </div>
+
+    <script>
+        // Function to detect in-app browsers
+        function isInAppBrowser() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return (
+                /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ/.test(userAgent)
+            );
+        }
+
+        // Function to open in an external browser
+        function openInExternalBrowser() {
+            const externalUrl = "https://blynk.mursid.site";
+            window.open(externalUrl, "_blank");
+        }
+
+        // Display warning if in-app browser is detected
+        if (isInAppBrowser()) {
+            document.getElementById("inAppBrowserWarning").style.display = "flex";
+        }
+    </script>
 </body>
 </html>

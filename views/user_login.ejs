@@ -195,15 +195,18 @@
     <script>
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // Common user-agent strings for in-app browsers or webviews
+            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv;|; wv/;
+            const standaloneBrowserKeywords = /(CriOS|FxiOS|OPiOS|EdgiOS|OPT|OPR|Opera|Chrome|Safari|Firefox|Edge|Mobile Safari)/i;
+
+            // First, check if it's a mainstream browser; if so, return false
+            if (standaloneBrowserKeywords.test(userAgent)) {
+                return false;
+            }
             
-            // Keywords typical of in-app browsers but excluding known standalone browsers
-            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
-            const externalBrowserKeywords = /Chrome|Safari|Firefox|Edge|OPR|Opera/i;
-            
-            // Detect in-app browsers, excluding major browsers
-            return (
-                inAppKeywords.test(userAgent) && !externalBrowserKeywords.test(userAgent)
-            );
+            // Check for in-app browser or embedded webview presence
+            return inAppKeywords.test(userAgent) || userAgent.includes("wv");
         }
 
         function openInExternalBrowser() {

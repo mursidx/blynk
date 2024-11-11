@@ -129,40 +129,6 @@
         .fab.fa-google {
             color: black;
         }
-
-        /* test */
-        #inAppBrowserWarning {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-            z-index: 9999;
-        }
-
-        #inAppBrowserWarning button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3a7e99;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        #inAppBrowserWarning button:hover {
-            background-color: #2e6477;
-        }
     </style>
 </head>
 <body>
@@ -184,52 +150,5 @@
             </h3>
         </div>
     </div>
-
-    <!-- Warning message for in-app browsers -->
-    <div id="inAppBrowserWarning">
-        <h2>Please Open in an External Browser</h2>
-        <p>For the best experience, please open this page in an external browser like Chrome or Safari.</p>
-        <button onclick="openInExternalBrowser()">Open in External Browser</button>
-    </div>
-
-    <script>
-        function isInAppBrowser() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            // Common in-app browser or webview identifiers
-            const inAppBrowserKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
-            
-            // Detect webview by checking the presence of "wv" (commonly used in web views)
-            const isInApp = inAppBrowserKeywords.test(userAgent) || userAgent.includes("wv");
-
-            // To be more accurate, exclude mainstream browsers like Chrome, Safari, Firefox, etc.
-            const externalBrowsers = /(Chrome|Safari|Firefox|Edge|Opera|OPR|CriOS|FxiOS)/i;
-
-            // If the user is using an external browser, return false, and no warning should be shown
-            if (externalBrowsers.test(userAgent)) {
-                return false;  // Not an in-app browser
-            }
-
-            return isInApp;  // If it's an in-app browser or webview, return true
-        }
-
-        function openInExternalBrowser() {
-            const externalUrl = "https://blynk.mursid.site";
-            
-            if (navigator.share) {
-                navigator.share({ url: externalUrl });
-            } else {
-                const newWindow = window.open(externalUrl, "_blank");
-                if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
-                    alert("Please copy the URL and paste it into your browser's address bar.");
-                }
-            }
-        }
-
-        // Only show the warning if the user is on an in-app browser
-        if (isInAppBrowser()) {
-            document.getElementById("inAppBrowserWarning").style.display = "flex";
-        }
-    </script>
 </body>
 </html>

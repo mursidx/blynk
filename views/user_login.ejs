@@ -196,17 +196,21 @@
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-            // Common user-agent strings for in-app browsers or webviews
-            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv;|; wv/;
-            const standaloneBrowserKeywords = /(CriOS|FxiOS|OPiOS|EdgiOS|OPT|OPR|Opera|Chrome|Safari|Firefox|Edge|Mobile Safari)/i;
-
-            // First, check if it's a mainstream browser; if so, return false
-            if (standaloneBrowserKeywords.test(userAgent)) {
-                return false;
-            }
+            // Common in-app browser or webview identifiers
+            const inAppBrowserKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
             
-            // Check for in-app browser or embedded webview presence
-            return inAppKeywords.test(userAgent) || userAgent.includes("wv");
+            // Detect webview by checking the presence of "wv" (commonly used in web views)
+            const isInApp = inAppBrowserKeywords.test(userAgent) || userAgent.includes("wv");
+
+            // To be more accurate, exclude mainstream browsers like Chrome, Safari, Firefox, etc.
+            const externalBrowsers = /(Chrome|Safari|Firefox|Edge|Opera|OPR|CriOS|FxiOS)/i;
+
+            // If the user is using an external browser, return false, and no warning should be shown
+            if (externalBrowsers.test(userAgent)) {
+                return false;  // Not an in-app browser
+            }
+
+            return isInApp;  // If it's an in-app browser or webview, return true
         }
 
         function openInExternalBrowser() {
@@ -222,7 +226,7 @@
             }
         }
 
-        // Display the warning only if an in-app browser is detected
+        // Only show the warning if the user is on an in-app browser
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

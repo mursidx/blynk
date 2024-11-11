@@ -193,21 +193,34 @@
     </div>
 
     <script>
-        // Function to detect in-app browsers
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
+            const isMobileSafari = /^((?!chrome|android).)*safari/i.test(userAgent) && /iPhone|iPad|iPod/i.test(userAgent);
+
+            // Detect common in-app browsers and exclude regular Chrome, Firefox, Safari, Edge, etc.
             return (
-                /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ/.test(userAgent)
+                inAppKeywords.test(userAgent) ||
+                (userAgent.includes("wv") && !isMobileSafari) ||
+                userAgent.includes("Version/") && userAgent.includes("Mobile/")
             );
         }
 
-        // Function to open in an external browser
         function openInExternalBrowser() {
             const externalUrl = "https://blynk.mursid.site";
-            window.open(externalUrl, "_blank");
+            
+            if (navigator.share) {
+                // Try opening the external link via the native share sheet, which usually defaults to an external browser.
+                navigator.share({ url: externalUrl });
+            } else {
+                // Fallback: Open with a new tab/window
+                const newWindow = window.open(externalUrl, "_blank");
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
+                    alert("Please copy the URL and paste it into your browser's address bar.");
+                }
+            }
         }
 
-        // Display warning if in-app browser is detected
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

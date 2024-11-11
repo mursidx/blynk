@@ -195,25 +195,25 @@
     <script>
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            // Common in-app browser keywords
-            const inAppKeywords = /Instagram|FBAN|FBAV|LinkedIn|Line|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
             
-            // Known browser keywords (to exclude Chrome, Safari, Firefox, etc.)
-            const excludedBrowsers = /Chrome|Safari|Firefox|Edge|SamsungBrowser|CriOS|FxiOS/;
+            // Keywords that indicate in-app browsers
+            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
+            
+            // Keywords to exclude major external browsers
+            const externalBrowserKeywords = /(Chrome|Safari|Firefox|Edge|SamsungBrowser)/i;
 
-            // Detect if it's a WebView (in-app browser) and not a standard external browser
-            return inAppKeywords.test(userAgent) && !excludedBrowsers.test(userAgent);
+            // Check if the userAgent matches in-app browsers and does NOT match any known external browser
+            return inAppKeywords.test(userAgent) && !externalBrowserKeywords.test(userAgent);
         }
 
         function openInExternalBrowser() {
             const externalUrl = "https://blynk.mursid.site";
             
             if (navigator.share) {
-                // Try opening the external link via the native share sheet, which usually defaults to an external browser.
+                // Try opening the external link via the native share sheet
                 navigator.share({ url: externalUrl });
             } else {
-                // Fallback: Open with a new tab/window
+                // Fallback: Open in a new tab/window
                 const newWindow = window.open(externalUrl, "_blank");
                 if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
                     alert("Please copy the URL and paste it into your browser's address bar.");
@@ -221,7 +221,7 @@
             }
         }
 
-        // Show warning only if detected as an in-app browser
+        // Show warning only if inside an in-app browser
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

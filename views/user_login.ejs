@@ -190,34 +190,37 @@
         <h2>Please Open in an External Browser</h2>
         <p>For the best experience, please open this page in an external browser like Chrome or Safari.</p>
         <button onclick="openInExternalBrowser()">Open in External Browser</button>
-        <p style="font-size: 12px; color: #aaa;">If the button doesn't work, copy this URL and paste it in Chrome or Safari: <br> <code>https://blynk.mursid.site</code></p>
     </div>
 
     <script>
-        // Function to detect specific in-app browsers (LinkedIn, Instagram, etc.)
         function isInAppBrowser() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            
-            // Specific keywords for detecting in-app WebViews and excluding common external browsers
-            const inAppKeywords = /Instagram|FBAN|FBAV|LinkedIn/i;
-            const isChromeOrSafariOrFirefox = /(Chrome|Safari|Firefox)/i.test(userAgent);
+            const inAppKeywords = /FBAN|FBAV|Instagram|Line|LinkedIn|Twitter|Snapchat|Pinterest|WhatsApp|WeChat|Weibo|QQ|wv|; wv/;
+            const isMobileSafari = /^((?!chrome|android).)*safari/i.test(userAgent) && /iPhone|iPad|iPod/i.test(userAgent);
 
-            // If in-app keyword is found and not in standard Chrome, Safari, or Firefox, return true
-            return inAppKeywords.test(userAgent) && !isChromeOrSafariOrFirefox;
+            // Detect common in-app browsers and exclude regular Chrome, Firefox, Safari, Edge, etc.
+            return (
+                inAppKeywords.test(userAgent) ||
+                (userAgent.includes("wv") && !isMobileSafari) ||
+                userAgent.includes("Version/") && userAgent.includes("Mobile/")
+            );
         }
 
-        // Function to try opening the link in an external browser
         function openInExternalBrowser() {
             const externalUrl = "https://blynk.mursid.site";
-            const newWindow = window.open(externalUrl, "_blank");
-
-            // If the new window is blocked or fails to open, show a manual prompt
-            if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
-                alert("Please copy the URL and open it in an external browser like Chrome or Safari.");
+            
+            if (navigator.share) {
+                // Try opening the external link via the native share sheet, which usually defaults to an external browser.
+                navigator.share({ url: externalUrl });
+            } else {
+                // Fallback: Open with a new tab/window
+                const newWindow = window.open(externalUrl, "_blank");
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == "undefined") {
+                    alert("Please copy the URL and paste it into your browser's address bar.");
+                }
             }
         }
 
-        // Show warning only if detected as an in-app browser
         if (isInAppBrowser()) {
             document.getElementById("inAppBrowserWarning").style.display = "flex";
         }

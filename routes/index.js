@@ -86,4 +86,8 @@ router.get('/profile/edit/:userid', async function (req, res) {
 
 
 
+  router.get('/test', function(req, res){
+    res.render('test')
+  })
+  
 module.exports = router;

@@ -1,10 +1,11 @@
 <%- include('./partials/header'); %>
-<style>
-    #cart-button {
-    border-radius: 16px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Increased shadow blur and opacity */
-}
-</style>
+    <style>
+        #cart-button {
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            /* Increased shadow blur and opacity */
+        }
+    </style>
 
     <body class="bg-gray-100 font-sans">
         <div class="max-w-screen-md mx-auto p-4">
@@ -45,7 +46,7 @@
                                     <%= elem.quantity %>
                                 </p>
                                 <a href="/cart/add/<%= elem._id %>" class="px-2 py-1 rounded"><i
-                                    class="ri-add-line"></i></a>
+                                        class="ri-add-line"></i></a>
                             </div>
                             <div class="flex gap-2 mt-4">
                                 <p class="text-gray-500 line-through">₹<%= Number(elem.price)*Number(elem.quantity)+20
@@ -170,52 +171,64 @@
                 </p>
             </div>
 
-<!-- Footer -->
-<div class="bg-white p-2 rounded-lg shadow fixed bottom-0 inset-x-0">
-    <div class="flex justify-between items-center">
-        <div>
-            <p class="text-sm">Delivering to Home</p>
-            <p class="text-xs text-gray-500">
-                <%= user.address ? user.address : 'Address not provided' %>
-            </p>
-        </div>
-        <a href="/map/address/<%= userid %>" class="text-blue-500">
-            <button class="text-blue-500">Change</button>
-        </a>
-        
-    </div>
+            <!-- Footer -->
+            <div class="bg-white p-2 rounded-lg shadow fixed bottom-0 inset-x-0">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm">Delivering to Home</p>
+                        <p class="text-xs text-gray-500">
+                            <%= user.address ? user.address : 'Address not provided' %>
+                        </p>
+                    </div>
+                    <a href="/map/address/<%= userid %>" class="text-blue-500">
+                        <button class="text-blue-500">Change</button>
+                    </a>
 
-    <div class="mt-2 lg:justify-center lg:flex">
-        <a id="cart-button" class="paybtn flex items-center justify-between px-4 py-1 bg-green-700 text-white lg:w-6/12">
-            <div class="flex items-center">
-                <div class="mr-2"> <!-- Margin to the right for spacing -->
-                    <svg viewBox="0 0 151.5 154.5" preserveAspectRatio="xMidYMid meet" style="max-width: 36px; height: 34px;">
-                        <g>
-                            <path fill-opacity="0.2" fill="#e1e1e1" d="M 35.5,-0.5 C 62.1667,-0.5 88.8333,-0.5 115.5,-0.5C 135.833,3.16667 147.833,15.1667 151.5,35.5C 151.5,63.1667 151.5,90.8333 151.5,118.5C 147.833,138.833 135.833,150.833 115.5,154.5C 88.8333,154.5 62.1667,154.5 35.5,154.5C 15.1667,150.833 3.16667,138.833 -0.5,118.5C -0.5,90.8333 -0.5,63.1667 -0.5,35.5C 3.16667,15.1667 15.1667,3.16667 35.5,-0.5 Z"></path>
-                        </g>
-                        <g>
-                            <path fill-opacity="0.93" fill="#fdfdfd" d="M 41.5,40.5 C 45.8333,40.5 50.1667,40.5 54.5,40.5C 57.0108,51.5431 59.6775,62.5431 62.5,73.5C 74.1667,73.5 85.8333,73.5 97.5,73.5C 99.4916,67.1906 101.492,60.8573 103.5,54.5C 91.8476,53.6675 80.1809,53.1675 68.5,53C 65.8333,51 65.8333,49 68.5,47C 82.1667,46.3333 95.8333,46.3333 109.5,47C 110.578,47.6739 111.245,48.6739 111.5,50C 108.806,60.4206 105.139,70.4206 100.5,80C 88.8381,80.4999 77.1714,80.6665 65.5,80.5C 65.2865,82.1439 65.6198,83.6439 66.5,85C 78.5,85.3333 90.5,85.6667 102.5,86C 111.682,90.8783 113.516,97.7117 108,106.5C 99.0696,112.956 92.0696,111.289 87,101.5C 86.2716,98.7695 86.4383,96.1029 87.5,93.5C 83.2047,92.3391 78.8713,92.1725 74.5,93C 77.4896,99.702 75.8229,105.035 69.5,109C 59.4558,111.977 53.4558,108.31 51.5,98C 51.8236,93.517 53.8236,90.017 57.5,87.5C 58.6309,85.9255 58.7975,84.2588 58,82.5C 55,71.1667 52,59.8333 49,48.5C 46.2037,47.7887 43.3704,47.122 40.5,46.5C 39.2291,44.1937 39.5624,42.1937 41.5,40.5 Z"></path>
-                        </g>
-                        <g>
-                            <path fill-opacity="0.2" fill="#e1e1e1" d="M 61.5,92.5 C 69.168,92.507 71.168,95.8403 67.5,102.5C 61.1974,104.363 58.3641,102.03 59,95.5C 60.045,94.6266 60.8783,93.6266 61.5,92.5 Z"></path>
-                        </g>
-                        <g>
-                            <path fill-opacity="0.202" fill="#e1e1e1" d="M 96.5,92.5 C 101.406,91.3057 104.406,93.139 105.5,98C 103.516,103.747 100.016,104.913 95,101.5C 93.0583,98.1406 93.5583,95.1406 96.5,92.5 Z"></path>
-                        </g>
-                    </svg>
                 </div>
-                <div class="flex flex-col items-start">
-                    <span class="text-sm font-medium"><%= cartCount %> Item<%= cartCount > 1 ? 's' : '' %></span> <!-- Adjust pluralization -->
-                    <span class="text-sm font-medium">₹<%= finalprice %></span>
+
+                <div class="mt-2 lg:justify-center lg:flex">
+                    <a id="cart-button"
+                        class="paybtn flex items-center justify-between px-4 py-1 bg-green-700 text-white lg:w-6/12">
+                        <div class="flex items-center">
+                            <div class="mr-2"> <!-- Margin to the right for spacing -->
+                                <svg viewBox="0 0 151.5 154.5" preserveAspectRatio="xMidYMid meet"
+                                    style="max-width: 36px; height: 34px;">
+                                    <g>
+                                        <path fill-opacity="0.2" fill="#e1e1e1"
+                                            d="M 35.5,-0.5 C 62.1667,-0.5 88.8333,-0.5 115.5,-0.5C 135.833,3.16667 147.833,15.1667 151.5,35.5C 151.5,63.1667 151.5,90.8333 151.5,118.5C 147.833,138.833 135.833,150.833 115.5,154.5C 88.8333,154.5 62.1667,154.5 35.5,154.5C 15.1667,150.833 3.16667,138.833 -0.5,118.5C -0.5,90.8333 -0.5,63.1667 -0.5,35.5C 3.16667,15.1667 15.1667,3.16667 35.5,-0.5 Z">
+                                        </path>
+                                    </g>
+                                    <g>
+                                        <path fill-opacity="0.93" fill="#fdfdfd"
+                                            d="M 41.5,40.5 C 45.8333,40.5 50.1667,40.5 54.5,40.5C 57.0108,51.5431 59.6775,62.5431 62.5,73.5C 74.1667,73.5 85.8333,73.5 97.5,73.5C 99.4916,67.1906 101.492,60.8573 103.5,54.5C 91.8476,53.6675 80.1809,53.1675 68.5,53C 65.8333,51 65.8333,49 68.5,47C 82.1667,46.3333 95.8333,46.3333 109.5,47C 110.578,47.6739 111.245,48.6739 111.5,50C 108.806,60.4206 105.139,70.4206 100.5,80C 88.8381,80.4999 77.1714,80.6665 65.5,80.5C 65.2865,82.1439 65.6198,83.6439 66.5,85C 78.5,85.3333 90.5,85.6667 102.5,86C 111.682,90.8783 113.516,97.7117 108,106.5C 99.0696,112.956 92.0696,111.289 87,101.5C 86.2716,98.7695 86.4383,96.1029 87.5,93.5C 83.2047,92.3391 78.8713,92.1725 74.5,93C 77.4896,99.702 75.8229,105.035 69.5,109C 59.4558,111.977 53.4558,108.31 51.5,98C 51.8236,93.517 53.8236,90.017 57.5,87.5C 58.6309,85.9255 58.7975,84.2588 58,82.5C 55,71.1667 52,59.8333 49,48.5C 46.2037,47.7887 43.3704,47.122 40.5,46.5C 39.2291,44.1937 39.5624,42.1937 41.5,40.5 Z">
+                                        </path>
+                                    </g>
+                                    <g>
+                                        <path fill-opacity="0.2" fill="#e1e1e1"
+                                            d="M 61.5,92.5 C 69.168,92.507 71.168,95.8403 67.5,102.5C 61.1974,104.363 58.3641,102.03 59,95.5C 60.045,94.6266 60.8783,93.6266 61.5,92.5 Z">
+                                        </path>
+                                    </g>
+                                    <g>
+                                        <path fill-opacity="0.202" fill="#e1e1e1"
+                                            d="M 96.5,92.5 C 101.406,91.3057 104.406,93.139 105.5,98C 103.516,103.747 100.016,104.913 95,101.5C 93.0583,98.1406 93.5583,95.1406 96.5,92.5 Z">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col items-start">
+                                <span class="text-sm font-medium">
+                                    <%= cartCount %> Item<%= cartCount> 1 ? 's' : '' %>
+                                </span> <!-- Adjust pluralization -->
+                                <span class="text-sm font-medium">₹<%= finalprice %></span>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-lg">Place Order</span>
+                            <i class="text-2xl ri-arrow-right-s-fill ml-1"></i>
+                        </div>
+                    </a>
                 </div>
             </div>
-            <div class="flex items-center"> 
-                <span class="text-lg">Place Order</span>
-                <i class="text-2xl ri-arrow-right-s-fill ml-1"></i>
-            </div>
-        </a>
-    </div>
-</div>
 
         </div>
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -223,24 +236,24 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-            <script>
-                document.querySelector('.paybtn').onclick = function (e) {
-                    axios.post('/payment/create/orderId')
-                        .then(function (response) {
-                            var options = {
-                                "key": "rzp_test_itTvoWeSi1lZca", // Enter the Key ID generated from the Dashboard
-                                "amount": response.data.amount, // Amount in currency subunits. Default currency is INR.
-                                "currency": response.data.currency,
-                                "name": "Blynk",
-                                "description": "Test Transaction",
-                                "image": "https://gplclub.co/wp-content/uploads/2024/11/apple-touch-icon.png",
-                                "order_id": response.data.id,
-                                "handler": function (response) {
-                                    axios.post('/payment/api/payment/verify', {
-                                        razorpayOrderId: response.razorpay_order_id,
-                                        razorpayPaymentId: response.razorpay_payment_id,
-                                        signature: response.razorpay_signature
-                                    })
+        <script>
+            document.querySelector('.paybtn').onclick = function (e) {
+                axios.post('/payment/create/orderId')
+                    .then(function (response) {
+                        var options = {
+                            "key": "rzp_test_itTvoWeSi1lZca", // Enter the Key ID generated from the Dashboard
+                            "amount": response.data.amount, // Amount in currency subunits. Default currency is INR.
+                            "currency": response.data.currency,
+                            "name": "Blynk",
+                            "description": "Test Transaction",
+                            "image": "https://gplclub.co/wp-content/uploads/2024/11/apple-touch-icon.png",
+                            "order_id": response.data.id,
+                            "handler": function (response) {
+                                axios.post('/payment/api/payment/verify', {
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    signature: response.razorpay_signature
+                                })
                                     .then(function (response) {
                                         let { razorpayOrderId, razorpayPaymentId, signature } = JSON.parse(response.config.data);
                                         window.location.href = `/order/<%= userid %>/${razorpayOrderId}/${razorpayPaymentId}/${signature}`;
@@ -248,29 +261,29 @@
                                     .catch(function (error) {
                                         console.error(error);
                                     });
-                                },
-                                "prefill": {
-                                    "name": "Harsh Sharma",
-                                    "email": "harsh.sharma@example.com",
-                                    "contact": "9000090000"
-                                },
-                                "notes": {
-                                    "address": "Razorpay Corporate Office"
-                                },
-                                "theme": {
-                                    "color": "#3399cc"
-                                }
-                            };
-                            var rzp1 = new Razorpay(options);
-                            rzp1.open();
-                            e.preventDefault();
-                        })
-                        .catch(function (error) {
-                            console.error(error);
-                        });
-                };
-            </script>
-            
+                            },
+                            "prefill": {
+                                "name": "<%=user.name%>",
+                                "email": "<%=user.email%>",
+                                "contact": "<%= user.phone %>"
+                            },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.open();
+                        e.preventDefault();
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            };
+        </script>
+
     </body>
 
     <%- include('./partials/footer'); %>
